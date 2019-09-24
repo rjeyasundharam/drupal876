@@ -1,0 +1,4 @@
+access_webservice:
+  title: 'Access to create user'
+  description: 'Gives permission to the user to access the webservice.'
+
