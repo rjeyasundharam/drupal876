@@ -1,0 +1,10 @@
+type: module
+name: YG QuiZ
+description: 'Create QuiZ'
+package: YG Modules
+core: 8.x
+dependencies:
+  - paragraphs:paragraphs
+
+libraries:
+  - yg_quiz/yg_quiz_timer

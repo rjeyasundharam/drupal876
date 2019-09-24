@@ -1,0 +1,67 @@
+# This file brings everything together. Very nifty!
+
+# Route name can be used in several places; e.g. links, redirects, and local
+# actions.
+entity.custom_quiz.canonical:
+  path: '/custom_quiz/{custom_quiz}'
+  defaults:
+    # Calls the view controller, defined in the annotation of the quiz
+    # entity. This marks this route as belonging to this entity type.
+    _entity_view: 'custom_quiz'
+    _title: 'quiz content'
+  requirements:
+    # Calls the access controller of the entity, passing in the suffix ('view')
+    # as the $operation parameter to checkAccess().
+    _entity_access: 'custom_quiz.view'
+
+entity.custom_quiz.collection:
+  path: '/custom_quiz/list'
+  defaults:
+  # Calls the list controller, defined in the annotation of the quiz entity.
+    _entity_list: 'custom_quiz'
+    _title: 'quiz list'
+  requirements:
+  # Checks for permission directly.
+    _permission: 'view quiz entity'
+
+custom_quiz.quiz_add:
+  path: '/custom_quiz/add'
+  defaults:
+    # Calls the form.add controller, defined in the quiz entity.
+    _entity_form: custom_quiz.default
+    _title: 'Add quiz'
+  requirements:
+    # Use the entity's access controller. _entity_create_access tells the router
+    # to use the access controller's checkCreateAccess() method instead of
+    # checkAccess().
+    _entity_create_access: 'custom_quiz'
+
+entity.custom_quiz.edit_form:
+  path: '/custom_quiz/{custom_quiz}/edit'
+  defaults:
+  # Calls the form.edit controller, defined in the quiz entity.
+    _entity_form: custom_quiz.default
+    _title: 'Edit quiz'
+  requirements:
+    # Calls the access controller of the entity, passing in the suffix
+    # ('update') as the $operation parameter to checkAccess().
+    _entity_access: 'custom_quiz.update'
+
+entity.custom_quiz.delete_form:
+  path: '/quiz/{custom_quiz}/delete'
+  defaults:
+    # Calls the form.delete controller, defined in the quiz entity.
+    _entity_form: custom_quiz.delete
+    _title: 'Delete quiz'
+  requirements:
+    # Calls the access controller of the entity, passing in the suffix
+    # ('delete') as the $operation parameter to checkAccess().
+    _entity_access: 'custom_quiz.delete'
+
+custom_quiz.quiz_settings:
+  path: '/admin/structure/custom_quiz'
+  defaults:
+    _form: '\Drupal\custom_quiz\Form\QuizSettingsForm'
+    _title: 'quiz settings'
+  requirements:
+    _permission: 'administer quiz entity'

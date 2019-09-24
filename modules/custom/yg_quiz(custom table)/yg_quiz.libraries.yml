@@ -1,0 +1,12 @@
+yg_quiz_timer:
+  version: 1.x
+  css:
+    theme:
+      css/timer.css: {}
+  js:
+    js/timer.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

@@ -1,0 +1,11 @@
+<header id="home" style="background-image: url({{ file_url(content.field_background_image['#items'].entity.uri.value)}});">
+    <div class="container h-100">
+        <div class="row h-100">               
+            <div class="col-md-8 mx-auto text-center slider-content wow slideInUp">                   
+                <h1 class="">{{content.field_title.0}}</h1>
+                <p class="tagline">{{content.field_description.0}}</p>
+                <a href="{{content.field_link.0["#url"]}}" class="btn btn-primary">{{content.field_link.0["#title"]}}</a>
+            </div>
+        </div>
+    </div>
+</header>

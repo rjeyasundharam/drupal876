@@ -1,0 +1,6 @@
+drupal_informations.drupal_information:
+  title: 'Get Drupal Informations'
+  description: 'Get Drupal Informations from site url'
+  parent: system.admin_config
+  url: internal:/drupal-informations
+  weight: 3

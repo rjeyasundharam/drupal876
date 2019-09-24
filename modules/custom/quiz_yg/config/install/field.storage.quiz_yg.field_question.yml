@@ -1,0 +1,21 @@
+uuid: fe399a8b-ebd7-45d5-b2d2-5ceaafcac0b4
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_yg
+    - text
+_core:
+  default_config_hash: oCi7V-Ka7pXSebDW7prUvA1uCTd7fnVZxZToNytBqzg
+id: quiz_yg.field_question
+field_name: field_question
+entity_type: quiz_yg
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

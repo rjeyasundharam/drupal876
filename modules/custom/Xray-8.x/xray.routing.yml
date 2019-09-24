@@ -1,0 +1,21 @@
+xray.content:
+  path: '/admin/config/development/xray'
+  defaults:
+    _form: '\Drupal\xray\Form\xrayForm'
+    _title: 'Drupal Xray module'
+  requirements:
+    _permission: 'administer content'
+xray.ajaxcallback:
+  path: '/x-ray'
+  defaults:
+    _controller: '\Drupal\xray\Controller\xrayController::modules'
+    _title: 'Drupal AJAX Callback'
+  requirements:
+    _permission: 'administer content'
+xray.ajaxversion:
+  path: '/xray_version'
+  defaults:
+    _controller: '\Drupal\xray\Controller\xrayController::version'
+    _title: 'Drupal AJAX Callback'
+  requirements:
+    _permission: 'administer content'

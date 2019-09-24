@@ -1,0 +1,5 @@
+# quiz_yg.type_add:
+#   route_name: 'quiz_yg.type_add'
+#   title: 'Add quiz type'
+#   appears_on:
+#     - entity.quiz_yg_type.collection

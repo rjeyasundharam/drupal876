@@ -1,0 +1,6 @@
+services:
+  listalldata.subscriber:
+    class: Drupal\multifield\Routing\RouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+     - { name: event_subscriber }

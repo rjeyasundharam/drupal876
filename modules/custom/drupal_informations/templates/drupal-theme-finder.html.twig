@@ -1,0 +1,16 @@
+<div class="theme-finder">
+	<div class="row">
+	    <div class="col-md-4">
+		    <h2 class="block-title">{{title}}</h2>
+		    {{drupalize_form}}
+		</div>
+		    <div class="col-md-8">
+			{% if drupal.version %}
+				Drupal Version : {{drupal.version}}
+			{% endif %}
+		    {% if drupal.theme_name %}
+				Theme name : {{drupal.theme_name}}
+		    {% endif %}
+		    </div>
+	</div>
+</div>

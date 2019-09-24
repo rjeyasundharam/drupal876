@@ -1,0 +1,84 @@
+<div class="nav-menu fixed-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-dark navbar-expand-lg">
+                    {{page.logo}}
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+                    {{page.primary_menu}}
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header id="home" style="background-image: url({{banner_image}});">
+    <div class="container h-100">
+        <div class="row h-100">               
+            <div class="col-md-8 mx-auto text-center slider-content wow slideInUp">                   
+                <h1 class="">{{page['#title']}}</h1>
+            </div>
+        </div>
+    </div>
+</header>
+    
+{# Main #}
+<section id="not-found-section" class="text-center">
+  <div class="container">               
+    <div class="row"> 
+      <div class="not-found-body" >
+        <div class="not-title" >
+          <h1>401</h1>
+          <h2>Unauthorized Response Error</h2> 
+        </div>  
+          <h2>Access To The Webpage Was Denied. </h2>
+          <p class="not-p">You are not authorized to access this page. You must login to view this page.</p>
+          <a href="{{front_page}}"> Go Home </a>
+      </div>
+    </div>          
+  </div>    
+</section>
+{# Main #}
+    
+<footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+                    {{page.footer}}
+                </div>
+                <div class="col-12 col-lg-3 wow fadeInUp" data-wow-delay="0.6s">
+                    <h3>{{email_title}}</h3>
+                    <a href="mailto:{{email}}">{{email}}</a>
+                </div>
+                <div class="col-12 col-lg-3 wow fadeInUp" data-wow-delay="0.9s">
+                    <h3>{{call_title}}</h3>
+                    <p>{{phone_no}}</p>
+                </div>                
+                <div class="col-12 col-lg-2 wow fadeInUp" data-wow-delay="1.2s">
+                    <h3>{{follow_us_title}}</h3>
+                    <ul class="nav nav-social list-inline text-center">
+                        <li class="list-inline-item">
+                            <a class="nav-link pl-1 pr-1" href="{{facebook}}">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        </li>                        
+                        <li class="list-inline-item">
+                            <a class="nav-link pl-1 pr-1" href="{{twitter}}">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a class="nav-link pl-1 pr-1" href="{{instagram}}">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>                
+            </div>
+            <div class="row text-center">
+                <div class="col-12 col-lg-12 copyrights">
+                    <p><small>© 2018. <a href="#">YG Property One</a>. All Rights Reserved.<br />Theme By<a href="https://www.drupaldevelopersstudio.com/" target="_blank"> Drupal Developers Studio</a>, A Division of <a href="http://www.youngglobes.com" target="_blank">Young Globes</a></small></p>
+                </div>
+            </div>
+        </div>
+    </footer>

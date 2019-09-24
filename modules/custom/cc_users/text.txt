@@ -1,0 +1,122 @@
+
+function addcustomuser(array &$form, FormStateInterface $form_state) {
+  $value=$form_state->getValues();
+  $result['processresult']=[
+	  '#type' => 'container',
+	  '#attributes' => ['id' => 'signup-results'],
+	];
+	$error=ValidationController::validate($value);
+	
+	if(count($error)==0){	
+		$create=1;	
+		$ids = \Drupal::entityQuery('user')
+        ->condition('mail', $value['mail'])
+        ->range(0, 1)
+        ->execute();
+    if(!empty($ids)){
+		 	$result['processresult']['name']=[
+		    '#markup' => '<p>'.t('User Email already exist').'</p>',
+		  ];
+		  $create=0;
+		}
+		$ids = \Drupal::entityQuery('user')
+        ->condition('name', $value['name'])
+        ->range(0, 1)
+        ->execute();
+    if(!empty($ids)){
+		 	$result['processresult']['mail']=[
+		    '#markup' => '<p>'.t('User Name already exist').'</p>',
+		  ];
+		  $create=0;
+		}
+		if($create){
+			$user = User::create();
+
+		  //Mandatory settings
+		  $user->setPassword('cvr@123');
+		  $user->enforceIsNew();
+		  $user->setEmail( $value['mail']);
+
+		  //This username must be unique and accept only a-Z,0-9, - _ @ .
+		  $user->setUsername($value['name']);
+
+		  //Optional settings
+		  $language = 'en';
+		  $user->set("init", 'email');
+		  $user->set("langcode", $language);
+		  $user->set("preferred_langcode", $language);
+		  $user->set("preferred_admin_langcode", $language);
+		  $user->set("field_last_name", $value['field_last_name'][0]['value']);
+		  $user->set("field_usertype", $value['field_usertype'][0]['value']);
+		  $user->set("field_certify", $value['field_certify']['value']);
+		  $user->set("field_usertype", $value['field_usertype'][0]['value']);
+		  $user->set("field_ground_rounds", $value['field_ground_rounds']['value']);
+		  $user->set("field_zipcode", $value['field_zipcode'][0]['value']);
+		  
+		  $user->activate();
+
+		  //Save user
+		  $user->save();
+			if($user){
+				$result['processresult']['result']=[
+			    // '#markup' => '<p>'.t('User Successfully created').'</p>',
+			    '#markup'=>'
+			    <div id="signup_popup" class="overlay">
+						<div class="popup">
+							<h4>User Successfully created</h4>
+							<span class="close-signup">×</span>
+							<div class="content">
+								<div class="rightsign">
+									<div class="circle-loader load-complete">
+											<div class="checkmark draw"></div>
+									</div>
+								</div>
+								Welcome to our Clinic.
+							</div>
+						</div>
+					</div>',
+			  ];
+			}
+			else{
+				$result['processresult']['result']=[
+			    '#markup' => '
+			    <div id="result_popup" class="overlay">
+						<div class="popup">
+							<h4>'.t('Failed to create user1').'</h4>
+							<span class="close-result">×</span>
+							<div class="content">
+								<div class="rightsign">
+									<div class="circle-loader load-complete">
+											<div class="checkmark draw"></div>
+									</div>
+								</div>
+								Welcome to our Clinic.
+							</div>
+						</div>
+					</div>',
+			  ];
+			}
+		}
+	}
+	else{
+		\Drupal::messenger()->addError(t('Failed to create user'));
+			$result['processresult']['result']=[
+			    '#markup' => '
+			    <div id="result_popup" class="overlay">
+						<div class="popup">
+							<h4>'.t('Failed to create user1').'</h4>
+							<span class="close-result">×</span>
+							<div class="content">
+								<div class="rightsign">
+									<div class="circle-loader cross-load-complete">
+											<div class="crossmark draw"></div>
+									</div>
+								</div>
+								Welcome to our Clinic.
+							</div>
+						</div>
+					</div>',
+			  ];
+	}
+  return $result;
+} 

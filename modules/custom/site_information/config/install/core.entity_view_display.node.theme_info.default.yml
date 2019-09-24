@@ -1,0 +1,44 @@
+uuid: c75f36f7-7064-43fb-be09-cf45a63c4da3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.theme_info.field_contributed_theme
+    - field.field.node.theme_info.field_site_url
+    - field.field.node.theme_info.field_theme_name
+    - node.type.theme_info
+  module:
+    - user
+id: node.theme_info.default
+targetEntityType: node
+bundle: theme_info
+mode: default
+content:
+  field_contributed_theme:
+    weight: 104
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_site_url:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_theme_name:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

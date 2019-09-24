@@ -1,0 +1,4 @@
+access quiz game:
+  title: 'Access quiz Game For users'
+  description: 'Allow access to write the Quiz exam.'
+  restrict access: true

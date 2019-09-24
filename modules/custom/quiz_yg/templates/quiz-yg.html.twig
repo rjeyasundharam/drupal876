@@ -1,0 +1,55 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a quiz_yg.
+ *
+ * Available variables:
+ * - quiz_yg: Full quiz_yg entity.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - quiz_yg.getCreatedTime() will return the quiz_yg creation timestamp.
+ *   - quiz_yg.id(): The quiz_yg ID.
+ *   - quiz_yg.bundle(): The type of the quiz_yg, for example, "image" or "text".
+ *   - quiz_yg.getOwnerId(): The user ID of the quiz_yg author.
+ *   See Drupal\quiz_ygs\Entity\Paragraph for a full list of public properties
+ *   and methods for the quiz_yg object.
+ * - content: All quiz_yg items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - quiz_ygs: The current template type (also known as a "theming hook").
+ *   - quiz_ygs--type-[type]: The current quiz_ygs type. For example, if the quiz_yg is an
+ *     "Image" it would result in "quiz_ygs--type--image". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - quiz_ygs--view-mode--[view_mode]: The View Mode of the quiz_yg; for example, a
+ *     preview would result in: "quiz_ygs--view-mode--preview", and
+ *     default: "quiz_ygs--view-mode--default".
+ * - view_mode: View mode; for example, "preview" or "full".
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_quiz_yg()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'quiz_yg',
+    'quiz_yg--type--' ~ quiz_yg.bundle|clean_class,
+    view_mode ? 'quiz_yg--view-mode--' ~ view_mode|clean_class,
+    not quiz_yg.isPublished() ? 'quiz_yg--unpublished'
+  ]
+%}
+{% block quiz_yg %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </div>
+{% endblock quiz_yg %}

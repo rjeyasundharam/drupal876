@@ -1,0 +1,23 @@
+uuid: 6b6bac64-0175-4bf6-902a-ffc4d8e64b7b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_question
+    - quiz_yg.quiz_yg_type.multichoice
+  module:
+    - text
+_core:
+  default_config_hash: Y4jOqOJ5AQgnG_BLc8jPxR6JVuQHcOZao9nZ4RFxdug
+id: quiz_yg.multichoice.field_question
+field_name: field_question
+entity_type: quiz_yg
+bundle: multichoice
+label: Question
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

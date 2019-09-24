@@ -1,0 +1,42 @@
+uuid: 95c2246b-1ea0-4123-8cb3-5af359b8f286
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.multichoice.field_manswer
+    - field.field.quiz_yg.multichoice.field_question
+    - quiz_yg.quiz_yg_type.multichoice
+  module:
+    - quiz_yg
+    - text
+_core:
+  default_config_hash: Z1ptHN1vaJNg0uuTXEYDjHbE5_lX3KQIpe0-4RvJwiU
+id: quiz_yg.multichoice.default
+targetEntityType: quiz_yg
+bundle: multichoice
+mode: default
+content:
+  field_manswer:
+    type: entity_reference_quiz_yg
+    weight: 1
+    settings:
+      title: Quiz
+      title_plural: Quiz
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_quiz_yg_type: ''
+    third_party_settings: {  }
+    region: content
+  field_question:
+    weight: 0
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

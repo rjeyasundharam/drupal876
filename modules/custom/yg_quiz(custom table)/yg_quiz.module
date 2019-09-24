@@ -1,0 +1,50 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\Core\{Link,Url};
+
+function yg_quiz_menu_local_tasks_alter(&$data, $route_name) {
+  	// Add a tab linking to node/add to all pages.
+	$nid = \Drupal::routeMatch()->getRawParameter('node');
+	if(isset($nid)){
+		$ntype=Node::load($nid)->getType();
+		if($ntype!='quiz'){
+			unset($data['tabs'][0]['entity.node.quiz_result']);
+			unset($data['tabs'][0]['entity.node.take_quiz']);
+		}
+	}	
+}
+
+function yg_quiz_theme() {
+  return [
+    'node__quiz' => [
+      'template' => 'node--quiz',
+      'base hook' => 'node'
+    ],
+  ];
+}
+
+function yg_quiz_preprocess_node(&$variables){
+	$node = $variables['node'];
+ 	$node_type = $node->bundle();
+ 	if($node_type=='quiz'){
+		// $url = Url::fromRoute('yg_quiz.take_quiz', [
+	 //      'node' => $node->id(),
+	 //    ]);
+	 //    $variables['quiz_url']=$url->toString();
+	 //    $variables['count_question']=count($node->field_questions);
+	}
+}
+
+function yg_quiz_library_info_alter(&$libraries, $extension) {
+	global $base_url;
+	if($extension=='yg_quiz'){
+	    $module_handler = \Drupal::service('module_handler');
+	    $module_path = $module_handler->getModule('yg_quiz')->getPath();
+	    $new_path=$base_url."/".$module_path.'/js';
+	    $libraries['yg_quiz.quiz_timer']['version'] = '1.0';
+	    $new_js = [];
+	    $new_js[]=$new_path.'/timer.js';
+	    $libraries['yg_quiz.quiz_timer']['js'] = $new_js;
+  	}
+}

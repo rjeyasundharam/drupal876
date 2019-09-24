@@ -1,0 +1,11 @@
+# Define the menu links for this module
+
+entity.custom_quiz.collection:
+  title: 'Quiz Entity Example'
+  route_name: entity.custom_quiz.collection
+  description: 'List contacts'
+custom_quiz.admin.structure.settings:
+  title: 'Quiz'
+  description: 'Configure quiz entity'
+  route_name:  custom_quiz.quiz_settings
+  parent: system.admin_structure

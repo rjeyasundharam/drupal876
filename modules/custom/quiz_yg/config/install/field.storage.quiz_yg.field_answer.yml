@@ -1,0 +1,23 @@
+uuid: 20924ea9-dcc9-4a71-83a6-896c33df75e8
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_yg
+_core:
+  default_config_hash: u4srdUuzTuDQTb8DbM3rEMJ6H6HiNnJZeZzH8dj8iho
+id: quiz_yg.field_answer
+field_name: field_answer
+entity_type: quiz_yg
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

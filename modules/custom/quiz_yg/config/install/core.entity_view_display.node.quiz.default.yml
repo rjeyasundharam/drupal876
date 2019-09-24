@@ -1,0 +1,32 @@
+uuid: a0c704d0-fe9a-407b-baa8-c904fdfe0a03
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.quiz.field_questions
+    - node.type.quiz
+  module:
+    - entity_reference_revisions
+    - user
+_core:
+  default_config_hash: d2-zEmGjNBt3uRryNE0ILe8QT8m7_WBd_AmiNcut1_Q
+id: node.quiz.default
+targetEntityType: node
+bundle: quiz
+mode: default
+content:
+  field_questions:
+    type: entity_reference_revisions_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

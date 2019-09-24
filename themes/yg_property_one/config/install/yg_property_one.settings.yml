@@ -1,0 +1,17 @@
+#Mail Section
+email_title: Mail
+email: 'domain@mail.com'
+
+#call Section
+call_title: Call
+phone_no: '(+91) 12345 67890'
+
+#Footer Section
+follow_us_title: 'Follow Us'
+facebook: 'https://www.facebook.com'
+instagram: 'https://instagram.com'
+twitter: 'https://www.twitter.com'
+
+
+#banner Section For User pages and Not found pages
+banner_image: 'themes/yg_property_one/top-banner.jpg'

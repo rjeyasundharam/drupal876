@@ -1,0 +1,23 @@
+uuid: 876745a9-ee42-412c-aff0-b89f3ddb518a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_question
+    - quiz_yg.quiz_yg_type.t_or_f
+  module:
+    - text
+_core:
+  default_config_hash: m7xtqM3K4cdGbuhL13KFab-7rP83MFCSY8hLfLrPVco
+id: quiz_yg.t_or_f.field_question
+field_name: field_question
+entity_type: quiz_yg
+bundle: t_or_f
+label: Question
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

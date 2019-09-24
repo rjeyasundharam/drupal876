@@ -1,0 +1,7 @@
+xray.form:
+  version: 1.x
+  css:
+    theme:
+      xray.css: {}
+  js:
+    xray.js: {}

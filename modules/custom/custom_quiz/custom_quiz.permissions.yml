@@ -1,0 +1,10 @@
+'delete quiz':
+  title: Delete Quiz content.
+'add quiz':
+  title: Add Quiz content
+'view quiz':
+  title: View Quiz content
+'edit quiz':
+  title: Edit Quiz content
+'administer quiz':
+  title: Administer settings

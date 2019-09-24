@@ -1,0 +1,406 @@
+<?php
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
+use Drupal\cc_users\Controller\ValidationController;
+
+function cc_users_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+	$element_class=['form-group'];
+	
+	$form['account']['name']['#required_error']='';
+	$form['account']['mail']['#required_error']='';
+	$form['field_last_name']['widget'][0]['value']['#required_error']='';
+	$form['field_zipcode']['widget'][0]['value']['#required_error']='';
+	$form['field_certify']['widget']['value']['#required_error']='';
+	$form['field_usertype']['widget']['#required_error']='';
+
+
+	$form['field_usertype']['widget']['#attributes']['data-twig-suggestion']='usertype';
+
+	$form['actions']['signup'] = [
+    '#type' => 'submit',
+    '#value' => t("SIGN UP"),
+    '#ajax' => [
+      'wrapper' => 'cbed-signup-block',
+      'callback' => 'prompt',
+      // 'wrapper' => 'signup-results',
+      // 'callback' => 'addcustomuser',
+    ],
+    '#attributes' => [
+    	'class' => ['btn','btn-primary'],
+    ],
+  ];
+
+  $form['signupresult']=[
+    '#type' => 'container',
+    '#attributes' => ['id' => 'signup-results'],
+    '#weight' => -1,
+  ];
+  $form['field_ground_rounds']['#states']['visible']=[
+  	':input[name="field_usertype"]'=>[
+				'value'=>'healthcare_provider'
+  	]
+  ];
+
+
+  $form['account']['mail']['#description']='';
+  $form['account']['mail']['#title']=t('Email');
+  $form['account']['mail']['#attributes']['class'] = [
+  	'form-control',
+  ];
+  $form['account']['mail']['#wrapper_attributes']['class']=$element_class;
+  $form['account']['mail']['#weight']=0;
+  $form['account']['mail']['#ajax']=[
+    'wrapper' => 'mail-wrapper',
+    'callback' => 'CheckMail',
+    'event' => 'change',
+    'progress' => [
+      'type' => 'throbber',
+      'message' => t('Checking UserEmail..'),
+    ],
+  ];
+	$form['account']['mailresult']=[
+	  '#type' => 'container',
+	  '#attributes' => ['id' => 'mail-results'],
+	  '#weight' => 1
+	];
+
+  $form['account']['name']['#description']='';
+  $form['account']['name']['#weight']=2;
+  $form['account']['name']['#title']='First Name';
+  $form['account']['name']['#attributes']['class'] = [
+  	'form-control',
+  ];
+  $form['account']['name']['#ajax']=[
+    'wrapper' => 'name-wrapper',
+    'callback' => 'Checkusername',
+    'event' => 'change',
+    'progress' => [
+      'type' => 'throbber',
+      'message' => t('Checking Usename..'),
+    ],
+  ];
+  $form['account']['name']['#wrapper_attributes']['class']=$element_class;
+  $form['account']['nameresult']=[
+	  '#type' => 'container',
+	  '#weight' => 3,
+	  '#attributes' => ['id' => 'name-results'],
+	];
+
+	$form['field_last_name']['#attributes']['class']=$element_class;
+	$form['field_last_name']['widget'][0]['value']['#placeholder']=t('Last name');
+	$form['field_last_name']['widget'][0]['value']['#attributes']['class'] = [
+  	'form-control',
+  ];
+  
+  $form['field_zipcode']['#attributes']['class']=$element_class;
+	$form['field_zipcode']['widget'][0]['value']['#attributes']['class'] = [
+  	'form-control',
+  ];
+	$form['#attached'] = [
+    'library' => [
+      'cc_users/global-styling',
+    ],
+  ];
+  $form['field_certify']['widget']['#title']=$form['field_certify']['widget']['#description'];
+  $form['field_certify']['widget']['value']['#title']=$form['field_certify']['widget']['#description'];
+  $form['field_certify']['widget']['#description']='';
+  $form['field_certify']['widget']['value']['#description']='';
+  unset($form['field_usertype']['widget']['#options']['_none']);
+  unset($form['actions']['submit']);
+  unset($form['#validate']);
+  unset($form['#submit']);
+  $form['#prefix'] = '<section id="cbed-signup-block">';
+  $form['#suffix'] = '</section>';
+  $form['#cache'] = ['max-age' => 0];
+  // echo "<pre>";
+  // print_r(array_keys($form));
+  // print_r($form['actions']);
+  // print_r($form['#validate']);
+  // echo "</pre>";
+}
+function prompt(array $form, FormStateInterface $form_state) {
+	$error=0;
+	$value=$form_state->getValues();
+  if(isset($value['name']) && $value['name']!=''){
+		$name = $value['name'];
+		if (!preg_match("/^[a-zA-Z0-9 ]*$/",$name)) {
+		  $message= t("Only letters , Numbers and white space allowed First name"); 
+			$form['account']['name']['#required_error'] =$message;
+			$error=1;
+	  }
+	}
+	else{
+		$form['account']['name']['#required_error'] =t("Please enter your first name");
+		$error=1;
+  }
+
+  if(isset($value['mail']) && $value['mail']!=''){
+		$mail = $value['mail'];
+		if (ValidationController::validEmail($email)) {
+			$error=1;
+		  $message= t("Enter Valid Email"); 
+			$form['account']['mail']['#required_error'] =$message;
+	  }
+	}
+	else{
+		$form['account']['mail']['#required_error'] =t("Please enter your first name");
+		$error=1;
+  }
+
+	if(isset($value['field_last_name'][0]['value'])&& $value['field_last_name'][0]['value']!=''){
+		$name = $value['field_last_name'][0]['value'];
+		if (!preg_match("/^[a-zA-Z ]*$/",$name)) {
+			$error=1;
+		  $message= t("Only letters and white space allowed last name $name"); 
+			$form['field_last_name']['widget'][0]['value']['#required_error'] = $message;
+		}
+	}
+	else{
+		$error=1;
+	  $message= t('Please enter your last name'); 
+		$form['field_last_name']['widget'][0]['value']['#required_error'] = $message;
+	}
+
+	if(isset($value['field_zipcode'][0]['value']) && $value['field_zipcode'][0]['value']!=''){
+		$zipcode = $value['field_zipcode'][0]['value'];
+		if (!preg_match("/^[a-zA-Z0-9]*$/",$zipcode)) {
+			$error=1;
+		  $message= t("Enter valid zipcode"); 
+			$form['field_zipcode']['widget'][0]['value']['#required_error'] = $message;
+		}
+	}
+	else{
+		$error=1;
+	  $message= t('Please enter your zipcode'); 
+		$form['field_zipcode']['widget'][0]['value']['#required_error'] = $message;
+	}
+
+	if(isset($value['field_usertype'][0]['value']) && $value['field_usertype'][0]['value']!=''){
+		$zipcode = $value['field_usertype'][0]['value'];
+		if (!preg_match("/^[a-zA-Z0-9_]*$/",$zipcode)) {
+			$error=1;
+		  $message= t("Please select an option that best applies to you"); 
+			$form['field_usertype']['widget']['#required_error'] = $message;
+		}
+	}
+	else{
+		$error=1;
+	  $message= t('Please select an option that best applies to you'); 
+		$form['field_usertype']['widget']['#required_error'] = $message;
+	}
+
+	if(isset($value['field_certify']['value']) && $value['field_certify']['value']==0){
+		$error=1;
+	  $message= t('Please check the box to continue sign-up.'); 
+		$form['field_certify']['widget']['value']['#required_error'] = $message;
+	}
+	
+	if($error==0){	
+		$form['processresult']=[
+		  '#type' => 'container',
+		  '#attributes' => ['id' => 'signup-results'],
+		];
+	
+		$create=1;	
+		$ids = \Drupal::entityQuery('user')
+        ->condition('mail', $value['mail'])
+        ->range(0, 1)
+        ->execute();
+    if(!empty($ids)){
+    	$form['processresult']['name']=[
+		    '#markup' => '
+		    <div id="result_popup" class="overlay">
+					<div class="popup">
+						<h4>'.t('Failed to create user').'</h4>
+						<span class="close-result">×</span>
+						<div class="content">
+							<p>'.t('User Email already exist').'</p>
+							<div class="rightsign">
+								<div class="circle-loader cross-load-complete">
+										<div class="crossmark draw"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>',
+		  ];
+		  $create=0;
+		}
+		$ids = \Drupal::entityQuery('user')
+        ->condition('name', $value['name'])
+        ->range(0, 1)
+        ->execute();
+    if(!empty($ids)){
+    	$form['processresult']['name']=[
+			    '#markup' => '
+			    <div id="result_popup" class="overlay">
+						<div class="popup">
+							<h4>'.t('Failed to create user').'</h4>
+							<span class="close-result">×</span>
+							<div class="content">
+								<p>'.t('Username already exist').'</p>
+								<div class="rightsign">
+									<div class="circle-loader cross-load-complete">
+											<div class="crossmark draw"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>',
+			  ];
+		  $create=0;
+		}
+		if($create){
+			$user = User::create();
+
+		  //Mandatory settings
+		  $user->setPassword('cvr@123');
+		  $user->enforceIsNew();
+		  $user->setEmail( $value['mail']);
+
+		  //This username must be unique and accept only a-Z,0-9, - _ @ .
+		  $user->setUsername($value['name']);
+
+		  //Optional settings
+		  $language = 'en';
+		  $user->set("init", 'email');
+		  $user->set("langcode", $language);
+		  $user->set("preferred_langcode", $language);
+		  $user->set("preferred_admin_langcode", $language);
+		  $user->set("field_last_name", $value['field_last_name'][0]['value']);
+		  $user->set("field_usertype", $value['field_usertype'][0]['value']);
+		  $user->set("field_certify", $value['field_certify']['value']);
+		  $user->set("field_usertype", $value['field_usertype'][0]['value']);
+		  $user->set("field_ground_rounds", $value['field_ground_rounds']['value']);
+		  $user->set("field_zipcode", $value['field_zipcode'][0]['value']);
+		  
+		  $user->activate();
+
+		  //Save user
+		  $user->save();
+			if($user){
+				$form['processresult']['result']=[
+			    // '#markup' => '<p>'.t('User Successfully created').'</p>',
+			    '#markup'=>'
+			    <div id="signup_popup" class="overlay">
+						<div class="popup">
+							<h4>User Successfully created</h4>
+							<span class="close-signup">×</span>
+							<div class="content">
+								<div class="rightsign">
+									<div class="circle-loader load-complete">
+											<div class="checkmark draw"></div>
+									</div>
+								</div>
+								Welcome to our Clinic.
+							</div>
+						</div>
+					</div>',
+			  ];
+			}
+			else{
+				$form['processresult']['result']=[
+			    '#markup' => '
+			    <div id="result_popup" class="overlay">
+						<div class="popup">
+							<h4>'.t('Failed to create user').'</h4>
+							<span class="close-result">×</span>
+							<div class="content">
+								<div class="rightsign">
+									<div class="circle-loader cross-load-complete">
+											<div class="crossmark draw"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>',
+			  ];
+			}
+		}
+	}
+ 	return $form;
+}
+
+
+function Checkusername(array $form, FormStateInterface $form_state){
+	$value=$form_state->getValues();
+	$ids = \Drupal::entityQuery('user')
+        ->condition('name', $value['name'])
+        ->range(0, 1)
+        ->execute();
+  $result['nameresult']=[
+	  '#type' => 'container',
+	  '#attributes' => ['id' => 'name-results'],
+	];
+	if(!empty($ids)){
+	 	$result['nameresult']['result']=[
+	    '#markup' => '<small id="name-wrapper" class="form-text invalid-input">'.t('Username already exist').'</small>',
+	  ];
+	}
+	else{
+		$result['nameresult']['result']=[
+	    '#markup' => '<small id="name-wrapper" class="form-text invalid-input">'.t('Username is OK').'</small>',
+	  ];
+	}
+  return $result;
+}
+
+function CheckMail(array $form, FormStateInterface $form_state){
+	$value=$form_state->getValues();
+	$ids = \Drupal::entityQuery('user')
+        ->condition('mail', $value['mail'])
+        ->range(0, 1)
+        ->execute();
+  $result['mailresult']=[
+	  '#type' => 'container',
+	  '#attributes' => ['id' => 'mail-results'],
+	];
+	if(!empty($ids)){
+	 	$result['mailresult']['result']=[
+	    '#markup' => '<small id="mail-wrapper" class="form-text invalid-input">'.t('User Email already exist').'</small>',
+	  ];
+	}
+	else{
+		$result['mailresult']['result']=[
+	    '#markup' => '<small id="mail-wrapper" class="form-text invalid-input">'.t('User Email is OK').'</small>',
+	  ];
+	}
+  return $result;
+}
+
+function cc_users_preprocess_radios(&$variables){
+	// echo "<pre>";
+	// print_r($variables);
+	// echo "</pre>";
+}
+
+function cc_users_preprocess_form_element(&$variables) {
+  $element =& $variables['element'];
+  if(isset($element['#required_error'])){
+	  $variables['errors'] = $element['#required_error'];
+  } 
+  $str = $element['#children']->__toString();
+	if (strpos($str, 'checked="checked"') !== false) {
+	    $variables['active']='active';
+	}
+}
+
+
+function cc_users_preprocess_fieldset(&$variables) {
+  $element =& $variables['element'];
+  if(isset($element['#required_error'])){
+	  $variables['errors'] = $element['#required_error'];
+  } 
+}
+
+/**
+* Implements hook_theme_suggestions_input_alter().
+*/
+function cc_users_theme_suggestions_fieldset_alter(&$suggestions, array $variables) {
+	$element = $variables['element'];
+	if (isset($element['#attributes']['data-twig-suggestion'])) {
+	  if ($element['#attributes']['data-twig-suggestion'] == 'usertype') {
+	    $suggestions = ['usertype__fieldset'];
+	  }
+	}
+}

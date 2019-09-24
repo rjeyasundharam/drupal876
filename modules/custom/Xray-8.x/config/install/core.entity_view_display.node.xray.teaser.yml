@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.xray
+  module:
+    - user
+id: node.xray.teaser
+targetEntityType: node
+bundle: xray
+mode: teaser
+content:
+  links:
+    weight: 100
+hidden: {  }

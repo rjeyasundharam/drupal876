@@ -1,0 +1,71 @@
+# QuizType routing definition
+entity.quiz_yg_type.collection:
+  path: '/admin/structure/quiz_yg_type'
+  defaults:
+    _entity_list: 'quiz_yg_type'
+    _title: 'Quiz types'
+  requirements:
+    _permission: 'administer quiz_yg types'
+
+quiz_yg.type_add:
+  path: '/admin/structure/quiz_yg_type/add'
+  defaults:
+    _entity_form: 'quiz_yg_type.add'
+    _title: 'Add Quiz type'
+  requirements:
+    _permission: 'administer quiz_yg types'
+
+entity.quiz_yg_type.edit_form:
+  path: '/admin/structure/quiz_yg_type/{quiz_yg_type}'
+  defaults:
+    _entity_form: 'quiz_yg_type.edit'
+  requirements:
+    _permission: 'administer quiz_yg types'
+
+entity.quiz_yg_type.delete_form:
+  path: '/admin/structure/quiz_yg_type/{quiz_yg_type}/delete'
+  defaults:
+    _entity_form: 'quiz_yg_type.delete'
+    _title: 'Delete'
+  requirements:
+    _permission: 'administer quiz_yg types'
+
+quiz_yg.settings:
+  path: '/admin/config/content/quiz_yg'
+  defaults:
+    _form: '\Drupal\quiz_yg\Form\QuizSettingsForm'
+    _title: 'Quiz settings'
+  requirements:
+    _permission: 'administer quiz_yg settings'
+
+quiz_yg.take_quiz:
+  path: '/node/{node}/take_quiz'
+  defaults:
+    _form: 'Drupal\quiz_yg\Form\QuizForm'
+    _title_callback: 'Drupal\quiz_yg\Form\QuizForm::getTitle'
+  requirements:
+    _permission: 'access quiz game' 
+    _content_type:  'quiz'
+
+quiz_yg.quiz_result:
+  path: '/node/{node}/quiz-result'
+  defaults:
+    _controller: '\Drupal\quiz_yg\Controller\QuizResultController::getUserAllQuizResult'
+  requirements:
+    _permission: 'access quiz game' 
+    _content_type:  'quiz'
+
+quiz_yg.quiz_result_id:
+  path: '/node/{quiz_id}/quiz-result/{attempt_id}'
+  defaults:
+    _controller: '\Drupal\quiz_yg\Controller\QuizResultController::getUserQuizResult'
+  requirements:
+    _permission: 'access quiz game'
+
+quiz_yg.quiz_admin_result:
+  path: '/admin/quiz-result'
+  defaults:
+    _controller: '\Drupal\quiz_yg\Controller\AdminQuizController::getAdminQuizResult'
+  requirements:
+    _permission: 'access quiz game' 
+    _content_type:  'quiz'

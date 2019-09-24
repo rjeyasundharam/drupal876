@@ -1,0 +1,34 @@
+uuid: 3609fb46-4788-46ee-9261-6e1eb72809b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.answer.field_answer
+    - field.field.quiz_yg.answer.field_correct
+    - quiz_yg.quiz_yg_type.answer
+_core:
+  default_config_hash: ENjUDAvhwq6-QR7y8Pfsj3yTx-83Z8B7YzXfp4p9cTI
+id: quiz_yg.answer.default
+targetEntityType: quiz_yg
+bundle: answer
+mode: default
+content:
+  field_answer:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_correct:
+    weight: 1
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+hidden: {  }

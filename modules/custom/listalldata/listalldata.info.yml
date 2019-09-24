@@ -1,0 +1,5 @@
+type: module
+name: List all Data
+description: 'List all Entity Data'
+package: YG Modules
+core: 8.x

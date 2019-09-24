@@ -1,0 +1,14 @@
+global-styling:
+  css:
+    theme:
+      styles/bootstrap.min.css: {}
+      styles/main.css: {}
+     
+
+  js: 
+    js/bootstrap.min.js: {}
+   
+    
+  dependencies:
+    - core/jquery
+    - core/drupal

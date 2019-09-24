@@ -1,0 +1,7 @@
+name: Cannabinoid Clinical Rest API
+description: Provides Rest Services for users.
+package: 'CC modules'
+type: module
+core: 8.x
+# dependencies:
+#   - json:API

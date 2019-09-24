@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.xray.field_email
+    - field.field.node.xray.field_modules_list
+    - node.type.xray
+  module:
+    - user
+id: node.xray.default
+targetEntityType: node
+bundle: xray
+mode: default
+content:
+  field_email:
+    weight: 101
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+  field_modules_list:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  links:
+    weight: 100
+hidden: {  }

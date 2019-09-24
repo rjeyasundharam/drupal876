@@ -1,0 +1,3 @@
+multifield.field_storage_config_add:
+  class: \Drupal\Core\Menu\LocalActionDefault
+  deriver: \Drupal\multifield\Plugin\Derivative\MultifieldLocalAction

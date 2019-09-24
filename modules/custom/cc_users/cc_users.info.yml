@@ -1,0 +1,5 @@
+name: CC Users
+type: module
+description: Demonstrates how to create a User.
+package: CC modules
+core: 8.x

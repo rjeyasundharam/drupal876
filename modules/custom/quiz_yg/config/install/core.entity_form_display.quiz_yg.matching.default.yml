@@ -1,0 +1,32 @@
+uuid: d952c18c-a1e2-45aa-8981-6d191ab57c18
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.matching.field_match_options
+    - quiz_yg.quiz_yg_type.matching
+  module:
+    - quiz_yg
+_core:
+  default_config_hash: W6uRo0Hjk32zOcwAiaDCqIZGgUu3iy--FYt6h9nmD6E
+id: quiz_yg.matching.default
+targetEntityType: quiz_yg
+bundle: matching
+mode: default
+content:
+  field_match_options:
+    type: entity_reference_quiz_yg
+    weight: 0
+    settings:
+      title: Quiz
+      title_plural: Quiz
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_quiz_yg_type: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

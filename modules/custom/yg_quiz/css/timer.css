@@ -1,0 +1,10 @@
+#timer{
+	width: min-content;
+    padding: 10px;
+    font-size: 32px;
+    background: violet;
+    color: white;
+    text-align: center;
+    float: right;
+    border-radius: 30px;
+}

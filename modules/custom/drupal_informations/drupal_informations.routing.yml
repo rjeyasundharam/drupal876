@@ -1,0 +1,31 @@
+drupal_informations.drupal_information:
+  path: '/drupal-informations'
+  defaults:
+    _form: '\Drupal\drupal_informations\Form\DrupalInformationForm'
+    _title: 'Get Drupal Site Information'
+  requirements:
+    _permission: 'access content'
+
+drupal_informations.result:
+  path: '/site-result'
+  defaults:
+    _controller: '\Drupal\drupal_informations\Controller\DrupalInformationController::display_result'
+    _title: 'Site Result'
+  requirements:
+    _permission: 'access content'
+
+drupal_informations.import_process:
+  path: '/site-result/import/progress/{tid}'
+  defaults:
+    _controller: '\Drupal\drupal_informations\Controller\DrupalInformationController::processStatus'
+    _title: 'Site Result'
+  requirements:
+    _permission: 'access content'
+
+drupal_informations.getPDF:
+  path: '/getpdf'
+  defaults:
+    _controller: '\Drupal\drupal_informations\Controller\DrupalInformationController::getPDF'
+    _title: 'Site Result'
+  requirements:
+    _permission: 'access content'

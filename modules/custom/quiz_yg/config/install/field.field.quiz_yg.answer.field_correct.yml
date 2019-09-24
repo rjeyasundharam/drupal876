@@ -1,0 +1,25 @@
+uuid: 775a3123-3bd8-49a5-abdd-a89f3fed2da7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_correct
+    - quiz_yg.quiz_yg_type.answer
+_core:
+  default_config_hash: zoXWsM6hUq_7GjQ-S75DYfl76tauP8lnOyWgsiEXK3Y
+id: quiz_yg.answer.field_correct
+field_name: field_correct
+entity_type: quiz_yg
+bundle: answer
+label: Correct
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

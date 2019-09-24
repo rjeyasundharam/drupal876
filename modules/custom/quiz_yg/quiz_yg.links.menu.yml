@@ -1,0 +1,17 @@
+entity.quiz_yg_type.collection:
+  title: 'Quiz types'
+  parent: system.admin_structure
+  description: 'Create and manage Quiz types.'
+  route_name: entity.quiz_yg_type.collection
+
+quiz_yg.settings:
+  title: 'Quiz settings'
+  parent: system.admin_config_content
+  route_name: quiz_yg.settings
+
+yg_quiz.quiz_result_all:
+  title: 'Quiz Result'
+  description: 'example of how to make an admin settings page link'
+  parent: system.admin_content
+  url: internal:/admin/quiz-result
+  weight: 3

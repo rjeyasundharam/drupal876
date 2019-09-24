@@ -1,0 +1,196 @@
+<?php
+use Drupal\Component\Utility\Xss;
+use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Database\Database;
+use Drupal\file\Plugin\Core\Entity\FileInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function cannabinoid_clinic_preprocess_html(&$variables) {
+  foreach ($variables['user']->getRoles() as $role) {
+     $variables['attributes']['class'][] = 'role-' . $role;
+   }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function cannabinoid_clinic_preprocess_page(&$variables) {
+
+  //follow_us Section variables
+  $variables['follow_us_title'] = theme_get_setting('follow_us_title');
+  $variables['twitter'] = theme_get_setting('twitter');
+  $variables['facebook'] = theme_get_setting('facebook');
+  $variables['instagram'] = theme_get_setting('instagram');
+
+  //follow_us Section variables
+  $variables['email_title'] = theme_get_setting('email_title');
+  $variables['email'] = theme_get_setting('email');
+
+  //follow_us Section variables
+  $variables['call_title'] = theme_get_setting('call_title');
+  $variables['phone_no'] = theme_get_setting('phone_no');
+ 
+
+  // Bannner Image Settings
+   $fid = theme_get_setting('banner_image');
+   if(is_array($fid)){
+    $query = \Drupal::database()->select('file_managed', 'm');
+      $query->fields('m', ['filename','uri']);
+      $query->condition('fid',$fid[0]);
+      $results = $query->execute()->fetchAll();
+    foreach($results as $data){
+      $uri=$data->uri;
+    }
+    $variables['banner_image']=file_create_url($uri);
+   }
+   else{
+    $path=base_path().$fid;
+    $variables['banner_image']=$path;
+   }
+   
+
+  $variables['#attached']['drupalSettings']['base_url'] = base_path();
+}
+
+/**
+ * Implements hook_form_system_theme_settings_alter().
+ */
+function cannabinoid_clinic_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface &$form_state, $form_id = NULL) {
+
+  $fid = theme_get_setting('banner_image');
+  if(is_array($fid)){
+    $form['yg_app1_settings']['banner_image'] = array(
+      '#type'            => 'managed_file',
+      '#title'           => t('Banner image'),
+      '#default_value'   => theme_get_setting('banner_image'),
+      '#required'        => true,
+      '#description'     => t("The Banner images for users."),
+      '#upload_location' => 'public://'
+    );
+  }
+  else{
+   $form['yg_app1_settings']['banner_image'] = array(
+      '#type'            => 'managed_file',
+      '#title'           => t('Banner image'),
+      '#description'     => t("The Banner images for users."),
+      '#upload_location' => 'public://'
+    ); 
+  }
+
+   //mail us Section Start
+  $form['yg_app1_settings']['mail_us'] = array(
+    '#type' => 'details',
+    '#title' => 'Mail us Theme Settings',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['yg_app1_settings']['mail_us']['email_title'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('E-mail Title'),
+    '#default_value' => theme_get_setting('email_title'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );
+  $form['yg_app1_settings']['mail_us']['email'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('E-mail'),
+    '#default_value' => theme_get_setting('email'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );
+  
+   //Call us Section Start
+  $form['yg_app1_settings']['call_us'] = array(
+    '#type' => 'details',
+    '#title' => 'Call us Theme Settings',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  $form['yg_app1_settings']['call_us']['call_title'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Call Us Title'),
+    '#default_value' => theme_get_setting('call_title'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );
+  $form['yg_app1_settings']['call_us']['phone_no'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Phone Number'),
+    '#default_value' => theme_get_setting('phone_no'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );
+
+
+  //Follow Us Section Start
+  $form['yg_app1_settings']['follow_us'] = array(
+    '#type' => 'details',
+    '#title' => 'Follow us Theme Settings',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+
+  $form['yg_app1_settings']['follow_us']['follow_us_title'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Follow Us  Title'),
+    '#default_value' => theme_get_setting('follow_us_title'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );
+
+  $form['yg_app1_settings']['follow_us']['facebook'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Facebook'),
+    '#default_value' => theme_get_setting('facebook'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );
+  
+  $form['yg_app1_settings']['follow_us']['twitter'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Twitter'),
+    '#default_value' => theme_get_setting('twitter'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  ); 
+  
+  $form['yg_app1_settings']['follow_us']['instagram'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Instagram'),
+    '#default_value' => theme_get_setting('instagram'),
+    '#description'   => t("Place this text in the widget spot on your site."),
+  );  
+}
+
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function cannabinoid_clinic_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  // Get Request Object.
+  $request = \Drupal::request();
+    
+  // If there is HTTP Exception..
+  if ($exception = $request->attributes->get('exception')) {
+    // Get the status code.
+    $status_code = $exception->getStatusCode();
+    if (in_array($status_code, array(401, 403, 404))) {
+      $suggestions[] = 'page__' . $status_code;
+    }
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function cannabinoid_clinic_theme(&$existing, $type, $theme, $path) {
+  $hooks = array();
+  $hooks['user_login_form'] = array(
+      'render element' => 'form',
+      'template' => 'user-login-form',
+  );
+  $hooks['user_register_form'] = array(
+      'render element' => 'form',
+      'template' => 'user-register-form',
+  );
+  return $hooks;
+}

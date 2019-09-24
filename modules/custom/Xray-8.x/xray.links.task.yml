@@ -1,0 +1,5 @@
+xray.content:
+  title: 'Xray'
+  description: 'Scans a Drupal site for all available modules'
+  route_name: xray.content
+  base_route: system.admin_config_development

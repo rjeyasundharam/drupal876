@@ -1,0 +1,11 @@
+uuid: 7a44eb94-f650-49ba-b306-c237aa7b1706
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: F2LRONPzbzgrK0-hPZqLiB5MrBX5IiR7FaQ11gKNo-0
+id: t_or_f
+label: 'True Or False'
+icon_uuid: null
+description: ''
+behavior_plugins: {  }

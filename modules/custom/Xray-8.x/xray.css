@@ -1,0 +1,7 @@
+.loading {
+  background-image: url('loading_apple.gif');
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+  display: none;
+}

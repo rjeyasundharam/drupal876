@@ -1,0 +1,23 @@
+uuid: e887da73-6097-4a88-b5f9-0c4dfc315567
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_question
+    - quiz_yg.quiz_yg_type.matching_anwers
+  module:
+    - text
+_core:
+  default_config_hash: FqAqjeh0-kjNCEqrnQ4miSFkWae-lODKGYaPnT13UcM
+id: quiz_yg.matching_anwers.field_question
+field_name: field_question
+entity_type: quiz_yg
+bundle: matching_anwers
+label: 'Matching Question'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

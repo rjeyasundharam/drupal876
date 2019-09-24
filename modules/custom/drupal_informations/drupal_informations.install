@@ -1,0 +1,38 @@
+<?php
+
+// function drupal_informations_schema() {
+//   $schema = [];
+//   $schema['theme_information'] = [
+//     'description' => 'Table storing user Quiz attempts',
+//     'fields' => [
+//       'theme_id' => [
+//         'type' => 'serial',
+//         'size' => 'normal',
+//         'unsigned' => TRUE,
+//         'not null' => TRUE,
+//         'description' => 'The primary identifier of this relationship.',
+//       ],
+//       'theme_name' => [
+//         'type' => 'varchar',
+//         'length' => 255,
+//         'not null' => TRUE,
+//         'default' => '',
+//         'description' => 'Correct Answer of the Question.',
+//       ],
+//       'theme_version' => [
+//         'type' => 'varchar',
+//         'length' => 255,
+//         'not null' => TRUE,
+//         'default' => '',
+//         'description' => 'Correct Answer of the Question.',
+//       ],  
+//       'theme_usage' => [
+//         'type' => 'int',
+//         'not null' => TRUE,
+//         'default' => 0,
+//       ],
+//     ],
+//     'primary key' => ['theme_id'],
+//   ];
+//   return $schema;
+// }

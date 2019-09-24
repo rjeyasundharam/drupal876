@@ -1,0 +1,22 @@
+<div class="section light-bg" id="download" style="background-image: url({{ file_url(content.field_background_image['#items'].entity.uri.value)}});">
+    <div class="container h-100">
+        <div class="row h-100 text-center">
+            <div class="col-12 align-self-center">
+                <div class="col-12 col-lg-12">
+                    <h3>{{content.field_title.0}}</h3>
+                </div>
+                <div class="col-12 col-lg-8 mx-auto">
+                    <p>{{content.field_description.0}}</p>
+                    <a href="{{content.field_app_store_link.0['#url']}}">
+                        <img src="{{ file_url(content.field_app_store_image['#items'].entity.uri.value)}}"
+                        alt="{{ content.field_app_store_image['#items'].alt }}">
+                    </a>
+                    <a href="{{content.field_playstore_link.0['#url']}}">
+                        <img src="{{ file_url(content.field_play_store_image['#items'].entity.uri.value)}}"
+                        alt="{{ content.field_play_store_image['#items'].alt }}">
+                    </a>
+                </div>
+            </div>                
+        </div>
+    </div>           
+</div>

@@ -1,0 +1,8 @@
+
+webrtc.page_controller_view:
+  path: '/chatrooms/view'
+  defaults:
+    _controller: '\Drupal\webrtc\Controller\PageController::view'
+    _title: 'page'
+  requirements:
+    _permission: 'access content'

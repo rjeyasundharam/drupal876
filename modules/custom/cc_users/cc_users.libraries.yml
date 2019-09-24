@@ -1,0 +1,11 @@
+global-styling:
+  css:
+    theme:
+      css/popup.css: {}
+
+  js:
+    js/popup.js: {}
+  
+  dependencies:
+    - core/jquery
+    - core/jquery.once

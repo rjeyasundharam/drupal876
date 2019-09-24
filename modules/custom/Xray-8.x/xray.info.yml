@@ -1,0 +1,10 @@
+name: X-ray
+type: module
+description: Scans a Drupal site for all available modules
+core: 8.x
+package: Other
+dependencies:
+  - menu_ui
+  - path
+  - user
+

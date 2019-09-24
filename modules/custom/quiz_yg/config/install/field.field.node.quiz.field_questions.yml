@@ -1,0 +1,47 @@
+uuid: 05979b5d-d7b5-4be4-8c03-ed5df3988b4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_questions
+    - node.type.quiz
+    - quiz_yg.quiz_yg_type.matching
+    - quiz_yg.quiz_yg_type.multichoice
+    - quiz_yg.quiz_yg_type.t_or_f
+  module:
+    - entity_reference_revisions
+id: node.quiz.field_questions
+field_name: field_questions
+entity_type: node
+bundle: quiz
+label: Questions
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:quiz_yg'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      matching: matching
+      multichoice: multichoice
+      t_or_f: t_or_f
+    target_bundles_drag_drop:
+      answer:
+        weight: 6
+        enabled: false
+      matching:
+        enabled: true
+        weight: 7
+      matching_anwers:
+        weight: 8
+        enabled: false
+      multichoice:
+        enabled: true
+        weight: 9
+      t_or_f:
+        enabled: true
+        weight: 10
+field_type: entity_reference_revisions

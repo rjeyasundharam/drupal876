@@ -1,0 +1,5 @@
+type: module
+name: Drupal Information
+description: 'Get Site info'
+package: YG Modules
+core: 8.x

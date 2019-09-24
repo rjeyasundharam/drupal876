@@ -1,0 +1,3 @@
+multifield.fields:
+  class: \Drupal\Core\Menu\LocalTaskDefault
+  deriver: \Drupal\multifield\Plugin\Derivative\MultifieldUiLocalTask

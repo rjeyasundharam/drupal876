@@ -1,0 +1,10 @@
+{% if element['#field_name'] == 'field_usertype' %}
+	<div class="btn-group btn-group-vertical w-100" data-toggle="buttons">
+    	{{ children }}
+    	<small class="form-text invalid-input full">
+    		{{ element['#user-description'] }}
+    	</small>
+    </div>
+{% else %}
+	<div{{ attributes.addClass('form-radios') }}>{{ children }}</div>
+{% endif %}

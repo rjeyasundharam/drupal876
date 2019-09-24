@@ -1,0 +1,13 @@
+general:
+  version: 1.x
+  css:
+    theme:
+      css/webrtc.css: {}
+  js:
+    # //cdn.scaledrone.com/scaledrone.min.js: {}
+    js/scaledrone.min.js: {}
+    js/webrtc.js: {}
+
+  dependencies:
+    - core/drupalSettings
+    - core/jquery

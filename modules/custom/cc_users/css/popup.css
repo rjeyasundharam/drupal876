@@ -1,0 +1,252 @@
+
+.popup h4 {
+  text-align: center;
+  font-family: Tahoma, Arial, sans-serif;
+  color: #06D85F !important;
+  margin: 35px 0;
+}
+
+.box {
+  width: 40%;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.2);
+  padding: 35px;
+  border: 2px solid #fff;
+  border-radius: 20px/50px;
+  background-clip: padding-box;
+  text-align: center;
+}
+
+.button {
+  font-size: 1em;
+  padding: 10px;
+  color: #fff;
+  border: 2px solid #06D85F;
+  border-radius: 20px/50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+}
+.button:hover {
+  background: #06D85F;
+}
+
+.overlay {
+  z-index: 200;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: visible;
+  opacity: 1;
+}
+.popup {
+  z-index: 199;
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 5s ease-in-out;
+}
+
+.popup p {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 0;
+  color: #333;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.popup .close-signup,
+.popup .close-result{
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+.popup .close-signup:hover,
+.popup .close-result:hover {
+  color: #06D85F;
+  cursor: pointer;
+}
+.popup .content {
+  max-height: 30%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 700px){
+  .box{
+    width: 70%;
+  }
+  .popup{
+    width: 70%;
+  }
+}
+
+
+
+.circle-loader {
+  margin-bottom: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-left-color: #5cb85c;
+  animation: loader-spin 1.2s infinite linear;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  border-radius: 50%;
+  width: 7em;
+  height: 7em;
+}
+
+.load-complete {
+  -webkit-animation: none;
+  animation: none;
+  border-color: #5cb85c;
+  transition: border 500ms ease-out;
+}
+
+.rightsign{
+  text-align: center;
+}
+.checkmark {
+  display: block;
+}
+  
+.checkmark.draw:after {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg);
+}
+
+.checkmark:after {
+  opacity: 1;
+  height: 3.5em;
+  width: 1.75em;
+  transform-origin: left top;
+  border-right: 3px solid #5cb85c;
+  border-top: 3px solid #5cb85c;
+  content: '';
+  left: 1.75em;
+  top: 3.5em;
+  position: absolute;
+}
+
+.cross-load-complete {
+  -webkit-animation: none;
+  animation: none;
+  border-color: #E00;
+  transition: border 500ms ease-out;
+}
+
+.crossmark.draw:after {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: crossmark;
+  transform: scaleX(-1) rotate(135deg);
+}
+
+.crossmark.draw:before {
+  animation-duration: 800ms;
+  animation-timing-function: ease;
+  animation-name: crossmark;
+  transform: scaleX(-1) rotate(225deg);
+}
+
+.crossmark{
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 13px;
+}
+
+.crossmark:after{
+  position: absolute;
+  content: '';
+  display: block;
+  width: 85px;
+  height: 0px;
+  border: solid #E00;
+  border-width: 0 0px 5px 0;
+  transform: rotate(45deg);
+  left:0;
+  top:0;
+}
+.crossmark:before{
+    position: absolute;
+    content: '';
+    display: block;
+    width: 85px;
+    height: 0px;
+    border: solid #E00;
+    border-width: 0 0px 5px 0;
+    transform: rotate(-45deg);
+    left:0;
+    top:0;
+  }
+}
+
+
+@keyframes loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes crossmark {
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes checkmark{
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 1.75em;
+    opacity: 1;
+  }
+  40% {
+    height: 3.5em;
+    width: 1.75em;
+    opacity: 1;
+  }
+  100% {
+    height: 3.5em;
+    width: 1.75em;
+    opacity: 1;
+  }
+}
+
+
+.form-item-field-certify-value .form-required:after{
+  background-image: unset !important;
+}
+#cbed-signup-block{
+  z-index: 198 !important;
+}
+form.user-register-form .form-item{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}

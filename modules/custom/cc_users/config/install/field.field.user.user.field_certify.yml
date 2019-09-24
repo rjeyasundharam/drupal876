@@ -1,0 +1,24 @@
+uuid: dc92a08c-ef05-424e-a23c-aba5ed7cf89f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_certify
+  module:
+    - user
+id: user.user.field_certify
+field_name: field_certify
+entity_type: user
+bundle: user
+label: 'I certify that i am at least 18 years of age and want to receive infomation from Greenwich Biosciences ("Greenwich") and third'
+description: "I certify that i am at least 18 years of age and want to receive infomation from Greenwich Biosciences (\"Greenwich\") and third parties working on behalf of Greenwich. I agree that Greenwich may use the information I provide to send me health-related materials as well as information on Greenwich services, including marketing programs. Greenwich may also use my information for market research or to evaluate and improve the company's programs and services. I understand that I can opt-out at any time by clicking on the \"Unsubscribe\" link at the bottom of any page on this website or the bottom of all emails received.\r\nGreenwich Biosciences respects your information."
+required: true
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

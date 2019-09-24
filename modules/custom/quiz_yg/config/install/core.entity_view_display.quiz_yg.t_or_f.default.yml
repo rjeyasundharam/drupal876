@@ -1,0 +1,35 @@
+uuid: fd69d57e-ea18-479e-a30a-1907d1b8b259
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.t_or_f.field_question
+    - field.field.quiz_yg.t_or_f.field_torf_answer
+    - quiz_yg.quiz_yg_type.t_or_f
+  module:
+    - text
+_core:
+  default_config_hash: geOFtQwJWsFHEVpnFnemb1DeyzzQpO7k34FFClMGcQM
+id: quiz_yg.t_or_f.default
+targetEntityType: quiz_yg
+bundle: t_or_f
+mode: default
+content:
+  field_question:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_torf_answer:
+    weight: 1
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
+hidden: {  }

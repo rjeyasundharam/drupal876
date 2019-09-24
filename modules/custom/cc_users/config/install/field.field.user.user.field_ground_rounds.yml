@@ -1,0 +1,24 @@
+uuid: c932c2af-30dc-43ef-832b-defb91c1b531
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_ground_rounds
+  module:
+    - user
+id: user.user.field_ground_rounds
+field_name: field_ground_rounds
+entity_type: user
+bundle: user
+label: 'I am interested in signing up for ground rounds.'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

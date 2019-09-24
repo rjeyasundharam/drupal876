@@ -1,0 +1,20 @@
+uuid: 2699d8f9-e696-4fe3-aac9-659812017490
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_zipcode
+  module:
+    - user
+id: user.user.field_zipcode
+field_name: field_zipcode
+entity_type: user
+bundle: user
+label: 'ZIP Code'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

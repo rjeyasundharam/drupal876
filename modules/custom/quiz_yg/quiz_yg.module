@@ -1,0 +1,614 @@
+<?php
+
+/**
+ * @file
+ * Contains quiz_yg.module
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field\Plugin\migrate\source\d7\Field;
+use Drupal\field\Plugin\migrate\source\d7\FieldInstance;
+use Drupal\field\Plugin\migrate\source\d7\ViewMode;
+use Drupal\migrate_drupal\Plugin\migrate\FieldMigration;
+use Drupal\quiz_yg\Entity\QuizType;
+use Drupal\quiz_yg\Plugin\migrate\field\FieldCollection;
+use Drupal\Core\Render\Element;
+use Drupal\node\Entity\Node;
+use Drupal\Core\{Link,Url};
+
+/**
+ * Implements hook_help().
+ */
+function quiz_yg_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the quiz_yg module.
+    case 'help.page.quiz_yg':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Quiz module provides a field type that can contain several other fields and thereby allows users to break content up on a page. Administrators can predefine <em>Quiz types</em> (for example a simple text block, a video, or a complex and configurable slideshow). Users can then place them on a page in any order instead of using a text editor to add and configure such elements. For more information, see the <a href=":online">online documentation for the Quiz module</a>.', [':online' => 'https://www.drupal.org/node/2444881']) . '</p>';
+      return $output;
+    break;
+  }
+}
+
+function quiz_yg_type_get_types() {
+  return QuizType::loadMultiple();
+}
+
+function quiz_yg_type_get_names() {
+  return array_map(function ($bundle_info) {
+    return $bundle_info['label'];
+  }, \Drupal::service('entity_type.bundle.info')->getBundleInfo('quiz_yg_type'));
+}
+
+function quiz_yg_type_load($name) {
+  return QuizType::load($name);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function quiz_yg_theme() {
+  return [
+    'quiz_yg' => [
+      'render element' => 'elements',
+    ],
+    'quiz_yg_dropbutton_wrapper' => [
+      'variables' => array('children' => NULL),
+    ],
+    'quiz_yg_info_icon' => [
+      'variables' => [
+        'message' => NULL,
+        'icon' => NULL,
+      ],
+    ],
+    'quiz_yg_add_dialog' => [
+      'render element' => 'element',
+      'template' => 'quiz_yg-add-dialog',
+    ],
+    'quiz_yg_actions' => [
+      'render element' => 'element',
+      'template' => 'quiz_yg-actions',
+    ],
+    'node__quiz' => [
+      'template' => 'node--quiz',
+      'base hook' => 'node'
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function quiz_yg_theme_suggestions_quiz_yg(array $variables) {
+  $suggestions = array();
+  $quiz_yg = $variables['elements']['#quiz_yg'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'quiz_yg__' . $sanitized_view_mode;
+  $suggestions[] = 'quiz_yg__' . $quiz_yg->bundle();
+  $suggestions[] = 'quiz_yg__' . $quiz_yg->bundle() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function quiz_yg_form_entity_form_display_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($form['#entity_type'], $form['#bundle']);
+  // Loop over ERR field's display options with quiz_yg target type.
+  foreach (array_keys($field_definitions) as $field_name) {
+    if ($field_definitions[$field_name]->getType() == 'entity_reference_revisions') {
+      if ($field_definitions[$field_name]->getSettings()['target_type'] == 'quiz_yg') {
+        foreach (['options_buttons', 'options_select', 'entity_reference_revisions_autocomplete'] as $option) {
+          unset($form['fields'][$field_name]['plugin']['type']['#options'][$option]);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function quiz_yg_form_field_storage_config_edit_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_state->getFormObject()->getEntity()->getType() == 'entity_reference') {
+    // Entity Reference fields are no longer supported to reference Quiz.
+    unset($form['settings']['target_type']['#options'][(string) t('Content')]['quiz_yg']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Indicate unsupported multilingual quiz_yg field configuration.
+ */
+function quiz_yg_form_field_config_edit_form_alter(&$form,  \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $field = $form_state->getFormObject()->getEntity();
+
+  if (!\Drupal::hasService('content_translation.manager')) {
+    return;
+  }
+
+  $bundle_is_translatable = \Drupal::service('content_translation.manager')
+    ->isEnabled($field->getTargetEntityTypeId(), $field->getTargetBundle());
+
+  if (!$bundle_is_translatable
+    || $field->getType() != 'entity_reference_revisions'
+    || $field->getSetting('target_type') != 'quiz_yg') {
+    return;
+  }
+
+  // This is a translatable ERR field pointing to a quiz_yg.
+  $message_display = 'warning';
+  $message_text = t('Quiz fields do not support translation. See the <a href=":documentation">online documentation</a>.', [
+    ':documentation' => Url::fromUri('https://www.drupal.org/node/2735121')
+      ->toString()
+  ]);
+
+  if ($form['translatable']['#default_value'] == TRUE) {
+    $message_display = 'error';
+  }
+
+  $form['quiz_yg_message'] = array(
+    '#type' => 'container',
+    '#markup' => $message_text,
+    '#attributes' => array(
+      'class' => array('messages messages--' . $message_display),
+    ),
+    '#weight' => 0,
+  );
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Our quiz_yg_form_field_config_edit_form_alter() needs to be run after
+ * that of the content_translation module in order to see the current state
+ * of the translation field.
+ *
+ * The hook here can't be more specific, as the $hook that's passed in to this
+ * function is form_alter, and not form_FORM_ID_alter.
+ */
+function quiz_yg_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter' && isset($implementations['quiz_yg'])) {
+    $group = $implementations['quiz_yg'];
+    unset($implementations['quiz_yg']);
+    $implementations['quiz_yg'] = $group;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Indicate unsupported multilingual quiz_yg field configuration.
+ *
+ * Add a warning that quiz_yg fields can not be translated.
+ * Switch to error if a quiz_yg field is marked as translatable.
+ */
+function quiz_yg_form_language_content_settings_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Without it Quiz message are meaningless.
+  if (!\Drupal::hasService('content_translation.manager')) {
+    return;
+  }
+
+  $content_translation_manager = \Drupal::service('content_translation.manager');
+  $message_display = 'warning';
+  $message_text = t('(* unsupported) Quiz fields do not support translation. See the <a href=":documentation">online documentation</a>.', [
+    ':documentation' => Url::fromUri('https://www.drupal.org/node/2735121')
+      ->toString()]);
+  $map = \Drupal::service('entity_field.manager')->getFieldMapByFieldType('entity_reference_revisions');
+  foreach ($map as $entity_type_id => $info) {
+    if (!$content_translation_manager->isEnabled($entity_type_id)) {
+      continue;
+    }
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+
+    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface  $storage_definition */
+    foreach ($field_storage_definitions as $name => $storage_definition) {
+      if ($storage_definition->getSetting('target_type') && $storage_definition->getSetting('target_type') == 'quiz_yg') {
+
+        // For configurable fields, check all bundles on which the field exists,
+        // for base fields that are translable, check all bundles,
+        // untranslatable base fields do not show up at all.
+        $bundles = [];
+        if ($storage_definition instanceof FieldStorageConfigInterface) {
+          $bundles = $storage_definition->getBundles();
+        }
+        elseif ($storage_definition->isTranslatable()) {
+          $bundles = Element::children($form['settings'][$entity_type_id]);
+        }
+        foreach($bundles as $bundle) {
+          if (!$content_translation_manager->isEnabled($entity_type_id, $bundle)) {
+            continue;
+          }
+
+          // Update the label and if the quiz_yg field is translatable,
+          // display an error message instead of just a warning.
+          if (isset($form['settings'][$entity_type_id][$bundle]['fields'][$name]['#label'])) {
+            $form['settings'][$entity_type_id][$bundle]['fields'][$name]['#label'] = t('@field_label (* unsupported)', ['@field_label' => $form['settings'][$entity_type_id][$bundle]['fields'][$name]['#label']]);
+          }
+          if (!empty($form['settings'][$entity_type_id][$bundle]['fields'][$name]['#default_value'])) {
+            $message_display = 'error';
+          }
+        }
+      }
+    }
+  }
+
+  // Update the description on the hide untranslatable fields checkbox.
+  if (isset($form['settings']['quiz_yg'])) {
+    $quiz_yg_untranslatable_hide_description = t('Quiz types that are used in moderated content requires non-translatable fields to be edited in the original language form and this must be checked.');
+    foreach (Element::children($form['settings']['quiz_yg']) as $bundle) {
+      if (!empty($form['settings']['quiz_yg'][$bundle]['settings']['content_translation']['untranslatable_fields_hide'])) {
+        $form['settings']['quiz_yg'][$bundle]['settings']['content_translation']['untranslatable_fields_hide']['#description'] = $quiz_yg_untranslatable_hide_description;
+      }
+    }
+  }
+
+  $form['settings']['quiz_yg_message'] = array(
+    '#type' => 'container',
+    '#markup' => $message_text,
+    '#attributes' => array(
+      'class' => array('messages messages--' . $message_display),
+    ),
+    '#weight' => 0,
+  );
+}
+
+/**
+ * Prepares variables for quiz_yg templates.
+ *
+ * Default template: quiz_yg.html.twig.
+ *
+ * Most themes use their own copy of quiz_yg.html.twig. The default is located
+ * inside "templates/quiz_yg.html.twig". Look in there for the
+ * full list of variables.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - quiz_yg: The quiz_yg object.
+ *   - view_mode: View mode; e.g., 'full', 'teaser'...
+ */
+function template_preprocess_quiz_yg(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['quiz_yg'] = $variables['elements']['#quiz_yg'];
+
+  // Helpful $content variable for templates.
+  $variables += array('content' => array());
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  $quiz_yg_type = $variables['elements']['#quiz_yg']->getQuizType();
+  foreach ($quiz_yg_type->getEnabledBehaviorPlugins() as $plugin_id => $plugin_value) {
+    $plugin_value->preprocess($variables);
+  }
+
+}
+
+/**
+ * Prepares variables for modal form add widget template.
+ *
+ * Default template: quiz_yg-add-dialog.html.twig
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - buttons: An array of buttons to display in the modal form.
+ */
+function template_preprocess_quiz_yg_add_dialog(&$variables) {
+  // Define variables for the template.
+  $variables += ['buttons' => []];
+  foreach (Element::children($variables['element']) as $key) {
+    if ($key == 'add_modal_form_area') {
+      // $add variable for the add button.
+      $variables['add'] = $variables['element'][$key];
+    }
+    else {
+      // Buttons for the quiz_yg types in the modal form.
+      $variables['buttons'][$key] = $variables['element'][$key];
+    }
+  }
+}
+
+/**
+ * Prepares variables for quiz_yg_actions component.
+ *
+ * Default template: quiz_yg-actions.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - actions: An array of default action buttons.
+ *   - dropdown_actions: An array of buttons for dropdown.
+ */
+function template_preprocess_quiz_yg_actions(&$variables) {
+  // Define variables for the template.
+  $variables += ['actions' => [], 'dropdown_actions' => []];
+
+  $element = $variables['element'];
+
+  if (!empty($element['actions'])) {
+    $variables['actions'] = $element['actions'];
+  }
+
+  if (!empty($element['dropdown_actions'])) {
+    $variables['dropdown_actions'] = $element['dropdown_actions'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field_multiple_value_form().
+ */
+function quiz_yg_preprocess_field_multiple_value_form(&$variables) {
+  if (!empty($variables['table']['#header']) && isset($variables['table']['#rows'])) {
+    // Find quiz_yg_actions and move to header.
+    // @see template_preprocess_field_multiple_value_form()
+    if (!empty($variables['table']['#rows'][0]['data'][1]['data']['#quiz_yg_header'])) {
+      $variables['table']['#header'][0]['data'] = [
+        'title' => $variables['table']['#header'][0]['data'],
+        'button' => $variables['table']['#rows'][0]['data'][1]['data'],
+      ];
+      unset($variables['table']['#rows'][0]);
+    }
+
+    // Add the quiz_yg type as a class to every row.
+    if (isset($variables['element'][0]['#quiz_yg_type'])) {
+      foreach ($variables['table']['#rows'] as $key => $row) {
+        if (isset($row['data'][1]['data']['#quiz_yg_type'])) {
+          $variables['table']['#rows'][$key]['class'][] = 'quiz_yg-type--' . str_replace('_', '-', $row['data'][1]['data']['#quiz_yg_type']);
+        }
+      }
+    }
+  }
+
+  // Remove the drag handler if we are translating, if the field's cardinality
+  // is 1 or if there are no quiz_yg added. Passing through this will not
+  // only remove the drag handler but also the order column that is empty when
+  // no quiz_yg are added and when the field is single value.
+  if ((isset($variables['element']['#allow_reference_changes']) && !$variables['element']['#allow_reference_changes']) || (isset($variables['element']['#cardinality']) && $variables['element']['#cardinality'] == 1) || (isset($variables['table']['#rows']) && count($variables['table']['#rows']) == 0)) {
+    if (isset($variables['table']['#tabledrag'])) {
+      // Remove the tabledrag.
+      unset($variables['table']['#tabledrag']);
+      unset($variables['table']['#header'][1]);
+      foreach ($variables['table']['#rows'] as $key => $value) {
+        $variables['table']['#rows'][$key]['data'][0]['class'][] = 'quiz_yg-bullet';
+        // Restore the removed weight and give access FALSE.
+        $variables['table']['#rows'][$key]['data'][1]['data']['_weight'] = $value['data'][2]['data'];
+        unset($variables['table']['#rows'][$key]['data'][2]);
+        $variables['table']['#rows'][$key]['data'][1]['data']['_weight']['#access'] = FALSE;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function quiz_yg_libraries_info() {
+  $libraries = [
+    'Sortable' => [
+      'name' => 'Sortable',
+      'vendor url' => 'https://github.com/RubaXa/Sortable',
+      'download url' => 'https://github.com/RubaXa/Sortable/releases',
+      'files' => [
+        'js' => [
+          'Sortable.min.js' => [],
+        ],
+      ],
+      'version arguments' => [
+        // The version is at the end of the file, which is currently about 15k
+        // characters long.
+        'file' => 'Sortable.min.js',
+        'pattern' => '/\.version="(.*?)"/',
+        'lines' => 5,
+        'cols' => 20000
+      ]
+    ],
+  ];
+  return $libraries;
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function quiz_yg_library_info_alter(&$libraries, $extension) {
+  global $base_url;
+  if($extension=='quiz_yg'){
+    $module_handler = \Drupal::service('module_handler');
+    $module_path = $module_handler->getModule('quiz_yg')->getPath();
+    $new_path=$base_url."/".$module_path.'/js';
+    $libraries['quiz_yg.quiz_timer']['version'] = '1.0';
+    $new_js = [];
+    $new_js[]=$new_path.'/timer.js';
+    $libraries['quiz_yg.quiz_timer']['js'] = $new_js;    
+  }
+
+  if ($extension != 'quiz_yg') {
+    return;
+  }
+
+  if (\Drupal::moduleHandler()->moduleExists('libraries')) {
+    $info = libraries_detect('Sortable');
+  }
+  else {
+    // If the library module is not installed, hardcode the path and fetch
+    // the required information ourself.
+    $library_path = 'libraries/Sortable';
+    $file = 'Sortable.min.js';
+    $path = DRUPAL_ROOT . '/' . $library_path . '/' . $file;
+    if (file_exists($path)) {
+      if (preg_match('/\.version="(.*?)"/', file_get_contents($path), $version)) {
+        $info = [
+          'installed' => TRUE,
+          'version' => $version[1],
+          'library path' => $library_path,
+          'files' => [
+            'js' => [
+              $file => [],
+            ],
+          ],
+        ];
+      }
+    }
+  }
+
+  if (!empty($info['installed'])) {
+    $libraries['sortable'] += [
+      'version' => $info['version'],
+    ];
+    // Self hosted player, use files from library definition.
+    if (!empty($info['files']['js'])) {
+      foreach ($info['files']['js'] as $filename => $options) {
+        $libraries['sortable']['js']["/{$info['library path']}/{$filename}"] = $options;
+      }
+    }
+  }
+  else {
+    // Unset the libraries if we failed to detect them.
+    unset($libraries['sortable']);
+    unset($libraries['quiz_yg-dragdrop']);
+  }
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_migration_plugins_alter().
+ *
+ * @todo refactor/rethink this when
+ * https://www.drupal.org/project/drupal/issues/2904765 is resolved
+ */
+function quiz_yg_migration_plugins_alter(array &$migrations) {
+  foreach ($migrations as $key => &$migration) {
+    /** @var \Drupal\migrate\Plugin\MigrationPluginManager $migration_plugin_manager */
+    $migration_plugin_manager = \Drupal::service('plugin.manager.migration');
+    $migration_stub = $migration_plugin_manager->createStubMigration($migration);
+    /** @var \Drupal\migrate\Plugin\MigrateSourcePluginManager $source_plugin_manager */
+    $source_plugin_manager = \Drupal::service('plugin.manager.migrate.source');
+    $source = NULL;
+    $configuration = $migration['source'];
+    $source = $source_plugin_manager->createInstance($migration['source']['plugin'], $configuration, $migration_stub);
+    if ($source) {
+      if (is_a($migration['class'], FieldMigration::class, TRUE)) {
+
+        // Field storage.
+        if (is_a($source, Field::class)) {
+          _quiz_yg_migration_entity_type_adjust($migration);
+        }
+
+        // Field instance.
+        if (is_a($source, FieldInstance::class)) {
+          _quiz_yg_migration_entity_type_adjust($migration);
+          _quiz_yg_migration_bundle_adjust($migration);
+          $migration['migration_dependencies']['optional']['d7_field_collection_type'] = 'd7_field_collection_type';
+          $migration['migration_dependencies']['optional']['d7_quiz_yg_type'] = 'd7_quiz_yg_type';
+        }
+      }
+
+      // View Modes.
+      if (is_a($source, ViewMode::class)) {
+        _quiz_yg_migration_entity_type_adjust($migration, 'targetEntityType');
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function quiz_yg_entity_type_alter(array &$entity_types) {
+  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  // Remove the handler class for moderation as it is managed by the host.
+  $entity_types['quiz_yg']->setHandlerClass('moderation', '');
+}
+
+/**
+ * Remove 'field_' prefix from field collection bundles.
+ *
+ * @param array $migration
+ *   The migration configuration to process.
+ */
+function _quiz_yg_migration_bundle_adjust(array &$migration) {
+
+  if (!isset($migration['process']['bundle'])) {
+    $migration['process']['bundle'] = [];
+  }
+
+  $bundle_process = $migration['process']['bundle'];
+
+  // Try to play nice with other modules altering this, and don't replace
+  // it outright unless it's unchanged.
+  if (array_key_exists('plugin', $bundle_process)) {
+    $bundle_process = [$bundle_process];
+  }
+  $bundle_process['quiz_yg'] = [
+    'plugin' => 'quiz_yg_process_on_value',
+    'source_value' => 'entity_type',
+    'expected_value' => 'field_collection_item',
+    'process' => [
+      'plugin' => 'substr',
+      'start' => FieldCollection::FIELD_COLLECTION_PREFIX_LENGTH,
+    ],
+  ];
+  $migration['process']['bundle'] = $bundle_process;
+}
+
+/**
+ * Map field_collection_item and 'quiz_yg_item' fields to 'quiz_yg'.
+ *
+ * @param array $migration
+ *   Thei migration to process.
+ * @param string $destination
+ *   The process destination.
+ */
+function _quiz_yg_migration_entity_type_adjust(array &$migration, $destination = 'entity_type') {
+  $entity_type_process = $migration['process'][$destination];
+
+  // Try to play with other modules altering this, and don't replace it
+  // outright unless it's unchanged.
+  if (!is_array($entity_type_process)) {
+    $entity_type_process = [
+      [
+        'plugin' => 'get',
+        'source' => 'entity_type',
+      ],
+    ];
+  }
+  $entity_type_process['quiz_yg'] = [
+    'plugin' => 'static_map',
+    'map' => [
+      'field_collection_item' => 'quiz_yg',
+      'quiz_yg_item' => 'quiz_yg',
+    ],
+    'bypass' => TRUE,
+  ];
+  $migration['process'][$destination] = $entity_type_process;
+}
+
+
+function quiz_yg_menu_local_tasks_alter(&$data, $route_name) {
+    // Add a tab linking to node/add to all pages.
+  $nid = \Drupal::routeMatch()->getRawParameter('node');
+  if(isset($nid)){
+    $ntype=Node::load($nid)->getType();
+    if($ntype!='quiz'){
+      unset($data['tabs'][0]['entity.node.quiz_result']);
+      unset($data['tabs'][0]['entity.node.take_quiz']);
+    }
+  } 
+}
+
+function quiz_yg_preprocess_node(&$variables){
+  $node = $variables['node'];
+  $node_type = $node->bundle();
+  if($node_type=='quiz'){
+    $url = Url::fromRoute('quiz_yg.take_quiz', [
+        'node' => $node->id(),
+      ]);
+      $variables['quiz_url']=$url->toString();
+      $variables['count_question']=count($node->field_questions);
+  }
+}

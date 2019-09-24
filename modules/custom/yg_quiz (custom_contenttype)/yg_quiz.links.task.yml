@@ -1,0 +1,9 @@
+entity.node.take_quiz:
+  route_name: yg_quiz.take_quiz
+  base_route: entity.node.canonical
+  title: Take
+
+entity.node.quiz_result:
+  route_name: yg_quiz.quiz_result
+  base_route: entity.node.canonical
+  title: Quiz Result

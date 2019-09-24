@@ -1,0 +1,274 @@
+
+.node__meta,.statistics-counter,
+.node__submitted,.viewsreference--view-title{
+	display: none !important;
+}
+.visible{
+    visibility: visible;
+    animation-name: fadeInDown;
+}
+/*Menu Section Start*/
+.role-administrator .dialog-off-canvas-main-canvas{
+    width: 100%;
+    position: absolute;
+    top: 80px;
+}
+.region-primary-menu{
+    width: 100%;
+}
+.role-administrator .fixed-top{
+    top:80px;
+    z-index: 490;
+}
+.role-administrator .region-content{
+    position: relative;
+    top: 90px;
+    margin-bottom: 90px; 
+}
+
+/* page not found */
+#not-found-section {
+    padding: 100px 0px 100px;
+}
+
+.not-found{
+  height: 650px !important;
+}
+
+.not-found-body {
+    width: 70%;
+    margin: auto;
+}
+
+.not-found-body h2 {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.not-title {
+    border: 2px solid #d6619c !important;;
+    padding: 40px 50px;
+    width: 45%;
+    margin: auto;
+    margin-bottom: 40px;
+    border-radius: 10px;
+}
+
+.not-title h1 {
+    font-size: 125px;
+    font-family: monospace;
+    color: #d6619c !important;
+}
+
+.not-title h2 {
+    font-size: 25px;
+    margin: 0px;
+    color: #d6619c !important;
+}
+.not-p{
+    margin-bottom: 20px !important;
+}
+
+@media (min-width: 320px) and (max-width: 480px){
+    .not-title h1 {
+        font-size: 92px !important;
+        margin: 0px !important;
+        color: #d6619c !important !important;
+    }
+    .not-title h2 {
+        font-size: 22px !important;
+        margin: 0px !important;
+        color: #d6619c !important !important;
+    }
+    .not-title {
+        border: 2px solid #d6619c !important !important;
+        padding: 10px 20px 30px 20px !important;
+        width: 100% !important;
+        margin: auto !important;
+        margin-bottom: 40px !important;
+        border-radius: 10px !important;
+     }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .not-title h1 {
+        font-size: 92px !important;
+        margin: 0px !important;
+        color: #d6619c !important !important;
+    }
+    .not-title h2 {
+        font-size: 22px !important;
+        margin: 0px !important;
+        color: #d6619c !important !important;
+    }
+    .not-title {
+        border: 2px solid #d6619c !important !important;
+        padding: 30px 50px !important;
+        width: 100% !important;
+        margin: auto !important;
+        margin-bottom: 40px !important;
+        border-radius: 10px !important;
+    }
+}
+
+
+@media (min-width: 768px) and (max-width: 992px) {
+.not-title h1 {
+    font-size: 92px !important;
+    margin: 0px !important;
+    color: #d6619c !important !important;
+}
+.not-title h2 {
+    font-size: 22px !important;
+    margin: 0px !important;
+    color: #d6619c !important !important;
+}
+.not-title {
+    border: 2px solid #d6619c !important !important;
+    padding: 40px 50px 30px 50px !important;
+    width: 70% !important;
+    margin: auto !important;
+    margin-bottom: 40px !important;
+    border-radius: 10px !important;
+}
+}
+/* end page not found */
+
+/* User login Section Start */
+#user-login {
+    max-width: 45%;
+    margin: auto;
+    padding: 20px 40px 40px;
+    border: 2px solid #d6619c !important;
+    margin-bottom: 40px; 
+    margin-top: 80px;
+    overflow: hidden;
+}
+
+.login-text .form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.not-found-body a,
+.login-button a{
+    text-decoration: none !important;
+    font-weight: 600 !important;    
+}
+.not-found-body a,
+.login-button a,
+.path-user input[type="submit"] {
+    font-size: 18px;
+    padding: 13px 51px;
+    border-radius: 34px;
+    letter-spacing: 1px;
+    width:auto;
+    border:none;
+    font-weight:bolder;
+    background-color: #d6619c !important;
+    color: #fff;
+}
+.login-button a{
+    padding: 18px 51px;
+} 
+.not-found-body a:hover,
+.login-button a:hover,
+.path-user input[type="submit"]:hover{
+    background-color: #d6619c !important;
+    opacity: 0.78;
+    transition: 0.6s;
+}
+
+.login-button , #user-register-form .form-actions ,#user-pass .form-actions{
+    text-align: center;
+}
+.login-button .form-actions{
+    display: inline-flex;
+}
+#user-register-form , #user-pass{
+    max-width: 60%;
+    margin: auto;
+    margin-top: 80px;
+    margin-bottom: 40px;
+    border: 2px solid #d6619c !important;
+    padding: 20px 20px 40px;
+    overflow: hidden;
+}
+
+#user-register-form .js-form-item {
+    margin-bottom: 20px !important;
+}
+#user-register-form .image-widget-data input[type="file"]::-webkit-file-upload-button {
+    font-size: 18px;
+    padding: 5px 15px;
+    border-radius: 15px;
+    letter-spacing: 1px;
+    width:auto;
+    border:none;
+    font-weight:bolder;
+    background-color: #d6619c !important;
+    color: #fff;
+}
+#user-register-form select{
+    background-color: #d6619c !important;
+    color: #fff;
+    border-radius: 5px;
+}
+#user-register-form .image-widget-data input[type="submit"]{
+    width: fit-content !important;
+}
+#user-register-form .js-form-item input:not([type="checkbox"]),
+#user-pass .js-form-item input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+@media only screen and (max-width: 610px) {
+    #user-login {
+        max-width: 95% !important;
+        margin: auto;
+        border: 2px solid #d6619c !important;
+        margin-bottom: 40px;
+        margin-top: 80px;
+        overflow: hidden;
+    }
+    #user-register-form , #user-pass{
+        max-width: 95% !important;
+        margin: auto;
+        margin-top: 80px;
+        margin-bottom: 40px;
+        border: 2px solid #d6619c !important;
+        padding: 20px 20px 40px;
+        overflow: hidden;
+    }
+    .blog-detail-body {
+        padding: 50px;
+    }
+}
+@media (min-width: 611px) and (max-width: 992px) {
+    #user-login {
+        max-width: 60% !important;
+        margin: auto;
+        margin-top: 80px;
+        margin-bottom: 40px;
+        overflow: hidden;
+    }
+
+    #user-register-form , #user-pass{
+        max-width: 95% !important;
+        margin: auto;
+        margin-top: 80px;
+        margin-bottom: 40px;
+        border: 2px solid #d6619c !important;
+        padding: 20px 20px 40px;
+        overflow: hidden;
+    }
+}
+@media screen and (max-width: 400px){
+    .path-user #user-register-form input[type="submit"] {
+        padding: 13px 20px;
+    } 
+}
+/* User login Section End */

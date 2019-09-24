@@ -1,0 +1,6 @@
+yg_quiz.quiz_result_all:
+  title: 'Quiz Result'
+  description: 'example of how to make an admin settings page link'
+  parent: system.admin_content
+  url: internal:/admin/quiz-result
+  weight: 3

@@ -1,0 +1,141 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
+
+function site_information_cron() {
+	$url="https://www.drupal.org/api-d7/node.json?type=project_theme&page=0";
+	echo "<pre>";
+	$theme_list=[];
+	$i=0;
+	$connection = \Drupal::database();
+	
+	do{
+		$str=file_get_contents($url);
+		$themes=json_decode($str);
+		foreach ($themes->list as $theme) {
+			$theme_list[$i]['field_project_machine_name']=$theme->field_project_machine_name;
+			foreach ($theme->project_usage as $version=>$usages) {
+				$theme_list[$i]['project_usage'][$version]=	$usages;
+				if($usages>0){
+					$query = $connection->select('theme_information', 'ti');
+					$query->condition('theme_name', $theme->field_project_machine_name);
+					$query->condition('theme_version', $version);
+					$query->addField('ti', 'theme_id');
+					$sresult = $query->execute()->fetchField();
+					print_r("$theme->field_project_machine_name result is ".$result);
+					if($sresult==null){
+						$iresult = $connection->insert('theme_information')->fields([
+						    'theme_name' => $theme->field_project_machine_name,
+						    'theme_version' => $version,
+						    'theme_usage' => $usages,
+						])->execute();
+					}
+					else{
+						$uresult = $connection->update('theme_information')
+						  ->fields([
+						    'theme_usage' => $usages,
+						  ])
+						  ->condition('theme_name', $theme->field_project_machine_name)
+						  ->condition('theme_version', $version)
+						  ->execute();
+					}
+				}
+			}
+			$i++;
+		}
+		if(isset($themes->next))
+			$url=str_replace("node", "node.json", $themes->next);
+		else
+			$url="No Next";
+	}
+	while($url!="No Next");
+	// print_r($theme_list);
+	echo "</pre>";
+}
+
+function site_information_node_presave(EntityInterface $node){
+	$node_type = $node->bundle();
+ 	if($node_type=='theme_info'){
+ 		$found=0;
+		$domain=$node->field_site_url->value;
+		if(substr($domain, 0,4)!='http'){
+	      	$domain='http://'.$domain;
+	      	$node->field_site_url->value=$domain;
+	    }
+		// $headers = get_headers($domain);
+		// $input = preg_quote('X-Generator:', '~'); 
+		// $generator = preg_filter('~' . $input . '~', null, $headers);
+		// $key=key($generator);
+		
+		$data = file_get_contents($domain);
+		preg_match('/name=\"Generator\" content=\"([^<]+)\"/i', $data, $drupdata);
+
+		if(strpos($drupdata[1], 'drupal') !== false){
+			if(strpos($drupdata[1], '7') !== false ||strpos($drupdata[1], '6') !== false){
+				$version='7.x';
+				preg_match_all('/\/sites\/all\/themes\/(?P<theme_names>\w+)\//', $data, $matches);
+				preg_match_all('/\/sites\/all\/themes\/contrib\/(?P<theme_names>\w+)\//', $data, $cmatches);
+				preg_match_all('/jQuery\.extend\(Drupal\.settings\, ([^<]+)\)/', $data, $jmatches);
+			}
+			elseif(strpos($drupdata[1], '8') !== false){
+				$version='8.x';
+				preg_match_all('/\"\/themes\/(?P<theme_names>\w+)\//', $data, $matches);
+				preg_match_all('/\/themes\/contrib\/(?P<theme_names>\w+)\//', $data, $cmatches);
+			}
+			
+			if(count($matches["theme_names"])>0){
+				$found=1;
+				$values = array_count_values($matches["theme_names"]);
+				arsort($values);
+				$popular = array_slice(array_keys($values), 0, 5, true);
+				$node->field_theme_name->value=$popular[0];	
+			}
+			elseif(isset($jmatches[1][0])){
+				$found=1;
+				$values=json_decode($jmatches[1][0]);
+				if(isset($values->ajaxPageState->theme)){
+					$node->field_theme_name->value=$values->ajaxPageState->theme;
+				}
+			}
+			elseif (count($cmatches["theme_names"])>0){
+				$found=1;
+				$values = array_count_values($cmatches["theme_names"]);
+				arsort($values);
+				$popular = array_slice(array_keys($values), 0, 5, true);
+				$node->field_theme_name->value=$popular[0];	
+			}
+			if($found==0){
+				$connection = \Drupal::database();
+				$query = $connection->select('theme_information', 'ti');
+				$query->condition('theme_version', $version);
+				$query->addField('ti', 'theme_name');
+				$theme_list=[];
+				$theme_names = $query->execute()->fetchcol();
+				foreach ($theme_names as $theme_name) {
+					if($version=='7.x'){
+						$ch = curl_init($domain."/sites/all/themes/".$theme_name."/LICENSE.txt");
+					}
+					elseif ($version=='8.x') {
+						$ch = curl_init($domain."/themes/".$theme_name."/LICENSE.txt");
+					}
+					curl_setopt($ch, CURLOPT_NOBODY, true);
+			      	curl_exec($ch);
+			      	$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			      	if($httpcode == '200') {
+			      		if(!in_array($theme_name, $theme_list))
+				        $theme_list[]=$theme_name;
+			      	}
+			      	curl_close($ch);
+				}
+				if(count($theme_list)>0)
+					$node->field_theme_name->value=implode(",",$theme_list);
+				else
+					$node->field_theme_name->value="Couldn't find theme name";	
+			}
+		}
+		else{
+			$node->field_theme_name->value="Its not drupal site";	
+		}
+	}
+}

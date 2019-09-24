@@ -1,0 +1,61 @@
+.multifield-add-form  .form-item{
+	width: 20%;
+  float: left;
+  padding: 10px;
+}
+.multifield-add-form .form-item .field-suffix{
+  display: block;
+}
+.multifield-add-form .form-wrapper{
+	width: 100%;
+	height: 120px;
+	display: block;
+}
+.multifield-add-form .form-actions{
+  display: flex;
+  height: 30px;
+}
+.multifield-add-form .form-type-checkbox{
+	width: 10%;
+}
+
+
+.button--danger {
+ border: 1px solid #a6a6a6 !important;
+ border-radius: 20em !important;
+  color: #333 !important;
+  border-color: #a6a6a6 !important;
+  background-color: #f2f1eb !important;
+  padding: 4px 1.5em !important;
+  text-decoration: none !important;
+  text-shadow: 0 1px hsla(0, 0%, 0%, 0.5) !important;
+  font-weight: 700 !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+.button--danger:hover,
+.button--danger:focus {
+  color: #fff !important;
+  border-color: #1e5c90 !important;
+  background-color: #c72100 !important;
+  padding: 4px 1.5em !important;
+}
+.button--danger:focus {
+  border: 1px solid #1280df !important;
+}
+.button--danger:hover {
+  box-shadow: 0 1px 2px hsla(203, 10%, 10%, 0.25) !important;
+}
+.button--danger:active {
+  border-color: #144b78 !important;
+  background-image: -webkit-linear-gradient(top, #08639b, #c72100) !important;
+  background-image: linear-gradient(to bottom, #08639b, #c72100)!important;
+  box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.2) !important;
+  background-color: #c72100 !important;
+}
+.remove-button{
+	background-image: url(../image/delete.png) !important;
+    background-size: cover;
+    height: 54px;
+    background-color: #ff0000!important;
+    color: transparent !important;
+}

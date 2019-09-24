@@ -1,0 +1,21 @@
+uuid: c15b5c56-a0a1-4e4c-a6ce-e976b3bece07
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_answer
+    - quiz_yg.quiz_yg_type.answer
+_core:
+  default_config_hash: TYkB4zyl1dlOa5bRJlT1i-W_VbmV23DIQRZFxDLEajk
+id: quiz_yg.answer.field_answer
+field_name: field_answer
+entity_type: quiz_yg
+bundle: answer
+label: Answer
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,33 @@
+uuid: d55766f6-daea-4354-9068-53ba6e864ded
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.matching_anwers.field_answer
+    - field.field.quiz_yg.matching_anwers.field_question
+    - quiz_yg.quiz_yg_type.matching_anwers
+  module:
+    - text
+_core:
+  default_config_hash: tpUf7TRrAvzYJ6T_3On04tNDhv5qnbbtvXrR_b5pyik
+id: quiz_yg.matching_anwers.default
+targetEntityType: quiz_yg
+bundle: matching_anwers
+mode: default
+content:
+  field_answer:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_question:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden: {  }

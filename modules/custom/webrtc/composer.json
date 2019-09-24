@@ -1,0 +1,14 @@
+{
+  "name": "drupal/webrtc",
+  "type": "drupal-module",
+  "description": "WebRTC online video integration",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/webrtc",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/webrtc",
+    "source": "http://cgit.drupalcode.org/webrtc"
+  },
+  "require": { }
+}

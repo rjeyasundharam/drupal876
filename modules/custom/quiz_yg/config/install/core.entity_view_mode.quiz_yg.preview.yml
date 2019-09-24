@@ -1,0 +1,12 @@
+uuid: ce7868b8-9e51-4c37-b612-caf334f0e3ab
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_yg
+_core:
+  default_config_hash: w_TLFXzdw2FsszYGjUcb5HJeMJrmRcw8xr7roYbiwr8
+id: quiz_yg.preview
+label: Preview
+targetEntityType: quiz_yg
+cache: true

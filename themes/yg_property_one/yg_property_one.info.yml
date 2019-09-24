@@ -1,0 +1,24 @@
+name: 'YG Property One'
+description: 'YG Property one is a Responsive Drupal 8 theme for Property related websites.'
+# core: 8.x
+type: theme
+base theme: classy
+screenshot: yg_property_one.png
+
+regions:
+  header: Header
+  logo: Logo
+  primary_menu: Primary menu
+  content: Content
+  footer: Footer
+  
+libraries:
+  - yg_property_one/global-styling
+
+
+
+# Information added by Drupal.org packaging script on 2019-01-05
+version: '8.x-1.0'
+core: '8.x'
+project: 'yg_property_one'
+datestamp: 1546669985

@@ -1,0 +1,14 @@
+yg_quiz_timer:
+  version: 1.x
+  css:
+    theme:
+      css/timer.css: {}
+  js:
+    www.paypalobjects.com/api/checkout.js: {}
+    https://www.paypal.com/sdk/js?client-id=Aam4SCk9QhqlwSKksE-_6TOonv383wrk7vjQkhjNSzjzhyr1bR_WsieZzIfO6GhCli40kAybzOSSl69o : { type: external, minified: true }
+    js/timer.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

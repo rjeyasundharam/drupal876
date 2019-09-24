@@ -1,0 +1,35 @@
+uuid: 43020d5c-5bed-43c7-8304-3cf30f2163bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.multichoice.field_manswer
+    - field.field.quiz_yg.multichoice.field_question
+    - quiz_yg.quiz_yg_type.multichoice
+  module:
+    - entity_reference_revisions
+    - text
+_core:
+  default_config_hash: HI8CpipeJ2xF9NIQcMjNJxnfdb9AcRm_9g7vDTHfC_k
+id: quiz_yg.multichoice.default
+targetEntityType: quiz_yg
+bundle: multichoice
+mode: default
+content:
+  field_manswer:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_question:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden: {  }

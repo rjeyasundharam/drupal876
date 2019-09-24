@@ -1,0 +1,23 @@
+multifield.add_form:
+  path: '/admin/add-fields/{entity_type_id}/{bundle}'
+  defaults:
+    _form: 'Drupal\multifield\Form\MultifieldForm'
+    _title: 'Create Multifield'
+  requirements:
+    _permission: 'access content' 
+
+multifield.unlimited_form:
+  path: '/admin/structure/unlimited_form'
+  defaults:
+    _form: 'Drupal\multifield\Form\UnlimitedValuesForm'
+    _title: 'Create Multifield'
+  requirements:
+    _permission: 'access content' 
+
+multifield.wizard:
+  path: '/form/wizard'
+  defaults:
+    _form: 'Drupal\multifield\Form\Wizard'
+    _title: 'Create Autotextfields'
+  requirements:
+    _permission: 'access content' 

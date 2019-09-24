@@ -1,0 +1,25 @@
+uuid: 19b06a59-8341-49fe-8f34-4837d87e49e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_torf_answer
+    - quiz_yg.quiz_yg_type.t_or_f
+_core:
+  default_config_hash: He3XO6oEJAtxtbEu4lwTtrH1DrI_RoaPEFaPnHVEneo
+id: quiz_yg.t_or_f.field_torf_answer
+field_name: field_torf_answer
+entity_type: quiz_yg
+bundle: t_or_f
+label: 'True / False'
+description: 'Tick (✔) the Check box answer is True otherwise false'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

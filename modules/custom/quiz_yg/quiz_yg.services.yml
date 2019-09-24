@@ -1,0 +1,5 @@
+services:
+  plugin.manager.quiz_yg.behavior:
+    class: Drupal\quiz_yg\QuizBehaviorManager
+    parent: default_plugin_manager
+    arguments: ['@entity_type.manager', '@config.factory']

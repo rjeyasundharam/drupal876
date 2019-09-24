@@ -1,0 +1,26 @@
+uuid: 1f1bf602-0c85-434e-bfb0-8fea5e9ce366
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.matching.field_match_options
+    - quiz_yg.quiz_yg_type.matching
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: JBgqLcgqtcgzpKDQ8fXWgac1ALUlwWkdWKgsUI5gILU
+id: quiz_yg.matching.default
+targetEntityType: quiz_yg
+bundle: matching
+mode: default
+content:
+  field_match_options:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden: {  }

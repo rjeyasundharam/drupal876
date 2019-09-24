@@ -1,0 +1,58 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\Core\{Link,Url};
+
+function site_information_cron() {
+	$url="https://www.drupal.org/api-d7/node.json?type=project_theme&page=0";
+	echo "<pre>";
+	$theme_list=[];
+	$i=0;
+	$connection = \Drupal::database();
+	do{
+		$str=file_get_contents($url);
+		$themes=json_decode($str);
+		foreach ($themes->list as $theme) {
+			$theme_list[$i]['field_project_machine_name']=$theme->field_project_machine_name;
+			foreach ($theme->project_usage as $version=>$usages) {
+				$theme_list[$i]['project_usage'][$version]=	$usages;
+				$query = $connection->select('theme_information', 'ti');
+				$query->condition('ti.theme_name', $theme->field_project_machine_name);
+				$query->condition('ti.theme_version', $version);
+				$query->addField('ti', 'theme_id');
+				$result = $query->execute()->fetchField();
+				print_r($result);
+				// if($result;
+				// $result = $connection->insert('theme_information')->fields([
+				//     'theme_name' => $theme->field_project_machine_name,
+				//     'theme_version' => $version,
+				//     'theme_usage' => $usage,
+				//   ])->execute();
+			}
+			$i++;
+		}
+		print_r($themes->next);
+		// if(isset($themes->next))
+		// 	$url=str_replace("node", "node.json", $themes->next);
+		// else
+			$url="No Next";
+	}
+	while($url!="No Next");
+		print_r($theme_list);
+		echo "</pre>";
+		die();
+
+}
+
+function site_information_preprocess_node(&$variables){
+	$node = $variables['node'];
+ 	$node_type = $node->bundle();
+ 	if($node_type=='theme_info'){
+		// $url = Url::fromRoute('site_information.take_quiz', [
+	 //      'node' => $node->id(),
+	 //    ]);
+	 //    $variables['quiz_url']=$url->toString();
+	 //    $variables['count_question']=count($node->field_questions);
+	}
+}
+

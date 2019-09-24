@@ -1,0 +1,5 @@
+type: module
+name: Multifield Creation
+description: 'Create Multifields'
+package: YG Modules
+core: 8.x

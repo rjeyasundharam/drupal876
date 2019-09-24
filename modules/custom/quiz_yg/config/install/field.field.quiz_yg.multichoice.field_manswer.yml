@@ -1,0 +1,36 @@
+uuid: 00697694-7e53-4be0-a856-e575a4455812
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_manswer
+    - quiz_yg.quiz_yg_type.answer
+    - quiz_yg.quiz_yg_type.multichoice
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: XPFykrVLkwkn2p60vjQU5CtLtwT2sQYl0oBLfwgmY6k
+id: quiz_yg.multichoice.field_manswer
+field_name: field_manswer
+entity_type: quiz_yg
+bundle: multichoice
+label: Answer
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:quiz_yg'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      answer: answer
+    target_bundles_drag_drop:
+      answer:
+        enabled: true
+        weight: 3
+      multichoice:
+        weight: 4
+        enabled: false
+field_type: entity_reference_revisions

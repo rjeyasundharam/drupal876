@@ -1,0 +1,122 @@
+<?php
+
+function yg_quiz_schema() {
+  $schema = [];
+  $schema['quiz_attempts'] = [
+    'description' => 'Table storing user Quiz attempts',
+    'fields' => [
+      'attempt_id' => [
+        'type' => 'serial',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The primary identifier of this relationship.',
+      ],
+      'quiz_id' => [
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'The Quiz node relationship.',
+      ],
+      'user_id' => [
+        'type' => 'int',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'The Quiz node relationship.',
+      ], 
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ], 
+      'time_taken' => [
+        'type' => 'float',
+        'not null' => TRUE,
+        'default' => 0,
+        'precision'=>2,
+      ],
+    ],
+    'primary key' => ['attempt_id'],
+  ];
+  $schema['quiz_result'] = [
+    'description' => 'Table storing Quiz Result.',
+    'fields' => [
+      'result_id' => [
+        'type' => 'serial',
+        'size' => 'normal',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The primary identifier of this relationship.',
+      ],
+      'attempt_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The parent relationship of this relationship.',
+      ],
+      'quiz_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The quiz that this question belongs to.',
+      ],
+      'question_no' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The quiz version that this question belongs to.',
+      ],
+      'question_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The question node ID.',
+      ],
+      'user_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The question node version ID.',
+      ],
+      'answer' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Answer of the Question.',
+      ],
+      'correct_answer' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Correct Answer of the Question.',
+      ],
+      'correct' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Correct Answer of the Question.',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'score' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The Quiz Score',
+      ],
+    ],
+    'primary key' => ['result_id'],
+  ];
+
+  return $schema;
+}

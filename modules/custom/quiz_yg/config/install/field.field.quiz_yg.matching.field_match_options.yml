@@ -1,0 +1,42 @@
+uuid: a868db6e-d3cf-4208-9741-9b003b5283ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_yg.field_match_options
+    - quiz_yg.quiz_yg_type.matching
+    - quiz_yg.quiz_yg_type.matching_anwers
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: RIWoOSNf0xE3WawB5OWwzti895S8yNqHZtz4h_yFRF4
+id: quiz_yg.matching.field_match_options
+field_name: field_match_options
+entity_type: quiz_yg
+bundle: matching
+label: 'Matching options'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:quiz_yg'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      matching_anwers: matching_anwers
+    target_bundles_drag_drop:
+      answer:
+        weight: 5
+        enabled: false
+      matching:
+        weight: 6
+        enabled: false
+      matching_anwers:
+        enabled: true
+        weight: 7
+      multichoice:
+        weight: 8
+        enabled: false
+field_type: entity_reference_revisions

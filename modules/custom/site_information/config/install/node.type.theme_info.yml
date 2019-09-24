@@ -1,0 +1,18 @@
+uuid: a82977f3-d1d9-4bac-9f61-e7cce77985d4
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Theme Info'
+type: theme_info
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

@@ -1,0 +1,22 @@
+# Define the 'local' links for the module
+
+quiz.settings_tab:
+  route_name: custom_quiz.quiz_settings
+  title: Settings
+  base_route: custom_quiz.quiz_settings
+
+quiz.view:
+  route_name: entity.custom_quiz.canonical
+  base_route: entity.custom_quiz.canonical
+  title: View
+
+quiz.page_edit:
+  route_name: entity.custom_quiz.edit_form
+  base_route: entity.custom_quiz.canonical
+  title: Edit
+
+quiz.delete_confirm:
+  route_name:  entity.custom_quiz.delete_form
+  base_route:  entity.custom_quiz.canonical
+  title: Delete
+  weight: 10

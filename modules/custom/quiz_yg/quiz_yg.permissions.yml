@@ -1,0 +1,21 @@
+administer quiz_yg types:
+  title: 'Administer Quiz types'
+  description: 'Allow to define the existing Quiz types and their Fields'
+
+edit behavior plugin settings:
+  title: 'Edit behavior plugin settings'
+  description: 'Users with this permission can edit behavior plugin settings on Quiz behavior instance'
+
+view unpublished quiz_yg:
+  title: 'View unpublished quiz_yg'
+  description: 'Users with this permission can view quiz_yg that are unpublished'
+
+administer quiz_yg settings:
+  title: 'Administer Quiz settings'
+  description: 'Administer Quiz settings'
+  
+access quiz game:
+  title: 'Access quiz Game For users'
+  description: 'Allow access to write the Quiz exam.'
+  restrict access: true
+  

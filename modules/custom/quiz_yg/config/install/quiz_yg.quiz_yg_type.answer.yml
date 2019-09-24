@@ -1,0 +1,11 @@
+uuid: 1b3c98f0-a43b-4c4f-870d-2923eb8f5d2c
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: vGhCEEwsFjGFOTBFfLMR-DZXtRV1bqtCUd5GOsJJnzI
+id: answer
+label: Answer
+icon_uuid: null
+description: ''
+behavior_plugins: {  }

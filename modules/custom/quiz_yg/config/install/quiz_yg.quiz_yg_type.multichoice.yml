@@ -1,0 +1,11 @@
+uuid: db90df4d-10d1-401f-a154-b08cd62a2f45
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: RpZ3yX2Ft68H5VTFGsTEbwSeQb-UpvwMfHn2QnYe8lg
+id: multichoice
+label: 'Multiple choice'
+icon_uuid: null
+description: ''
+behavior_plugins: {  }

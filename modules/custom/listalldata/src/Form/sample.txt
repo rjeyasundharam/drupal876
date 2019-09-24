@@ -1,0 +1,312 @@
+<?php
+
+namespace Drupal\multifield\Form;
+
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Field\FieldTypePluginManager;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Provides a form for the "field storage" add page.
+ *
+ * @internal
+ */
+class MultifieldForm extends FormBase {
+  protected $entityTypeId;
+  protected $fields=1;
+  protected $field_type_options = [];
+  protected $bundle;
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'multifield_add_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state, $bundle="page",$entity_type_id = "node") {
+    // Initial number of names.
+    if(is_object($bundle))
+      $bundle=$bundle->get("type");
+
+    $form['#tree'] = TRUE;
+    $form['step'] = [
+      '#type' => 'value',
+      '#value' => !empty($form_state->getValue('step')) ? $form_state->getValue('step') : 1,
+    ];
+    $form_state->set('entity_type_id', $entity_type_id);
+    $form_state->set('bundle', $bundle);
+    $this->entityTypeId = $entity_type_id;
+    // dpm($this->entityTypeId);
+    $this->bundle = $form_state->get('bundle');
+    $type = \Drupal::service('plugin.manager.field.field_type');
+    $plugin_definitions = $type->getDefinitions();
+    // Gather valid field types.
+    
+    foreach ($type->getGroupedDefinitions($plugin_definitions) as $category => $field_types) {
+      foreach ($field_types as $name => $field_type) {
+        $this->field_type_options[$category][$name] = $field_type['label'];
+      }
+    }
+    $container='container-'.$this->fields;
+    
+
+    // Field label and field_name.
+    $form['fields']=[
+      '#type' => 'container',
+      '#attributes' => ['id' => 'multifieldset'],
+      "#tree" => TRUE,
+    ];
+
+    $form['fields']=$this->getContainer($form['step']['#value'],$form_state);
+
+    // Button to add more names.
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Save'),
+      '#button_type' => 'primary',
+    ];
+
+    $form['actions']['addfield'] = [
+      '#type' => 'submit',
+      '#submit' => ['::addNewFields'],
+      '#ajax' => [
+        'wrapper' => 'multifield-wrapper',
+        'callback' => '::prompt',
+      ],
+      '#value' => $this->t('Add another Field'),
+    ];
+
+    $form['#prefix'] = '<div id="multifield-wrapper">';
+    $form['#suffix'] = '</div>';
+    $form['#attached']['library'][] = 'multifield/multifield_layout';
+
+    return $form;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $error = FALSE;
+    $values = $form_state->getValues();
+    $destinations = [];
+    // dpm($form);
+    switch ($values['op']) {
+      case 'Add another Field':
+        $this->addNewFields($form, $form_state);
+        break;
+
+      default:
+        $this->finalSubmit($form, $form_state);
+    }
+    
+  }
+  public function finalSubmit(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    $fields=$values['fields'];
+    $type=$form_state->get('entity_type_id');
+    $bundle=$form_state->get('bundle');
+    $field_prefix=\Drupal::config('field_ui.settings')->get('field_prefix');
+    $entity_type=\Drupal::entityManager()->getDefinition($type);
+    // dpm($entity_type);
+    $param_key=$entity_type->getBundleEntityType();
+    
+   
+    foreach ($fields as $key => $value) {
+       $field_name=$field_prefix.$value['field_name'];
+      // dpm($type);
+      // dpm($bundle);
+      // dpm($field_name);
+      // dpm($value['new_storage_type']);
+      $field = FieldConfig::loadByName($type, $bundle, $field_name);
+      if (empty($field)) {
+        $field_storage=FieldStorageConfig::create(array(
+          'field_name' => $field_name,
+          'entity_type' => $type,
+          'type' => $value['new_storage_type'],
+          'cardinality' => -1,
+        ))->save();
+        $field_storage = FieldStorageConfig::loadByName($type, $field_name);
+        $field = FieldConfig::create([
+          'field_storage' => $field_storage,
+          'field_name' => $field_name,
+          'bundle' => $bundle,
+          'label' => $value['label'],
+        ]);
+        $field->save();
+        $type_widget = \Drupal::service('plugin.manager.field.field_type')->getDefinition($value['new_storage_type']);
+        
+        // Assign widget settings for the 'default' form mode.
+        entity_get_form_display($type,  $bundle, 'default')
+          ->setComponent($field_name, [
+            'type' =>$type_widget['default_widget'],
+          ])
+          ->save();
+        // Assign display settings for the 'default' and 'teaser' view modes.
+        entity_get_display($type,  $bundle, 'default')
+          ->setComponent($field_name, [
+            'type' => $type_widget['default_formatter'],
+          ])
+          ->save();
+      }
+    }
+    drupal_set_message("Fields Created");
+    $request = \Drupal::request();
+    $url=Url::fromRoute("entity.$type.field_ui_fields",[$param_key=>$bundle])->toString();
+    $response = new RedirectResponse($url);
+    $response->send();
+  }
+
+ 
+
+  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
+    if ($form_state->getValue('existing_storage_name')) {
+      return FALSE;
+    }
+    $field_name=\Drupal::config('field_ui.settings')->get('field_prefix'). $value;
+    $type=$this->entityTypeId;
+    $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($type);
+    return isset($field_storage_definitions[$field_name]);
+  }
+
+  public function prompt(array $form, FormStateInterface $form_state) {
+    return $form;
+  }
+
+  public function addNewFields(array $form, FormStateInterface $form_state) {
+    $form_state->setValue('step', $form_state->getValue('step') + 1);
+    $form_state->setRebuild();
+    return $form;
+  }
+
+  public function removeElement(array $form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    $fields=$values['fields'];
+    $counts=$values['step'];
+    $ccount=0;
+    for ($x = 0; $x < $counts; $x++) {
+      $check=true;
+      if(isset($fields[$x]['remove'])){
+        if($fields[$x]['remove']==1){
+          $check=false;
+          unset($fields[$x]);
+          $ccount++;
+        }
+      }
+    }
+    $count=$count-$ccount;
+    $fields=array_values($fields);
+    $form_state->set("fields",$fields);
+    $form_state->set("step",$count);
+    $form_state->setRebuild();
+    return $form;
+  }
+
+
+  public function getContainer($counts,FormStateInterface $form_state){
+    $field_prefix=\Drupal::config('field_ui.settings')->get('field_prefix');
+    $values = $form_state->getValues();
+    $fields=$values['fields'];
+    $form_container=[];
+    for ($x = 0; $x < $counts; $x++) {
+      $check=true;
+      if(isset($fields[$x]['remove'])){
+        if($fields[$x]['remove']==1){
+          $check=false;
+          unset($fields[$x]);
+        }
+      }
+      if($check){
+        $form_container[$x] = [
+          '#type' => 'container',
+          '#states' => [
+            // '!visible' => [
+            //   ':input[name="new_storage_type"]' => ['value' => ''],
+            // ],
+          ],
+        ];
+        $form_container[$x]['label'] = [
+          '#type' => 'textfield',
+          '#title' => $this->t('Label'),
+          '#size' => 15,
+          '#attributes'=> [
+             'class' => ['multifield-item'],
+          ],
+          '#required'=>true,
+        ];
+        $form_container[$x]['field_name'] = [
+          '#type' => 'machine_name',
+          '#field_prefix' => '<span dir="ltr">' . $field_prefix,
+          '#field_suffix' => '</span>&lrm;',
+          '#size' => 15,
+          '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
+          '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+          '#machine_name' => [
+            'source' => ['fields',$x,'label'],
+            'exists' => [$this, 'fieldNameExists'],
+          ],
+        ];
+        $form_container[$x]['new_storage_type'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Select Field Type'),
+          '#options' => $this->field_type_options,
+          '#empty_option' => $this->t('- Select a field type -'),
+          '#attributes'=> [
+             'class' => ['multifield-item'],
+          ],
+          '#required'=>TRUE,
+        ];
+        $form_container[$x]['remove'] = [
+          '#type' => 'checkbox',
+          '#checked'=> false,
+          '#title' => $this
+            ->t('Remove'),
+          '#ajax' => [
+            'wrapper' => 'multifield-wrapper',
+            'callback' => '::prompt',
+          ],
+        ];
+        $form_container[$x]['translatable'] = [
+          '#type' => 'value',
+          '#value' => TRUE,
+        ];
+      }
+      
+    }
+    $header = [
+       'label' => t('Label'),
+       'new_storage_type' => t('Select Type'),
+       'remove' => t('Remove'),
+    ];
+    
+        
+    foreach ($form_container as $key => $value) {
+          // this is the well documented format
+       $options[$key]['label']['data'] = $form_container[$key]['label'];
+       $options[$key]['new_storage_type']['data'] = $form_container[$key]['new_storage_type'];
+       $options[$key]['remove']['data'] = $form_container[$key]['remove'];
+       
+    }
+
+    $table= [
+        '#type' => 'table',
+        '#header' => $header,
+        '#rows' => $options,
+        '#empty' => t('No items available'), 
+      ];
+
+    return $table;
+  }
+
+}

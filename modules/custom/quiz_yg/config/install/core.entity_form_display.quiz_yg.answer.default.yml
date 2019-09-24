@@ -1,0 +1,34 @@
+uuid: 09afc0fd-de8e-48db-8f0b-1377b08266f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_yg.answer.field_answer
+    - field.field.quiz_yg.answer.field_correct
+    - quiz_yg.quiz_yg_type.answer
+_core:
+  default_config_hash: YHHqYuBs75VfxoOQy_SCESqJKN-I8EOTFYc08V7UbLA
+id: quiz_yg.answer.default
+targetEntityType: quiz_yg
+bundle: answer
+mode: default
+content:
+  field_answer:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_correct:
+    weight: 0
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

@@ -1,0 +1,22 @@
+uuid: 8254bac3-d5cf-492d-a752-3d433dcb24ce
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.quiz
+  module:
+    - user
+_core:
+  default_config_hash: _2UlVUSTSSkzlzL4zIxVwTp9vS-fTqOvCucw92ScNkY
+id: node.quiz.teaser
+targetEntityType: node
+bundle: quiz
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

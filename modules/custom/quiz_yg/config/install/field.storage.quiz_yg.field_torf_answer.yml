@@ -1,0 +1,20 @@
+uuid: 71353b22-bee2-4872-b6cc-a29f868847ec
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_yg
+_core:
+  default_config_hash: F4Dqs_A7KSkBQyuKR8LOXH2x1oTomWh88bsCEv73uPQ
+id: quiz_yg.field_torf_answer
+field_name: field_torf_answer
+entity_type: quiz_yg
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

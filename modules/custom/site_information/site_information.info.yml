@@ -1,0 +1,5 @@
+type: module
+name: Site Information
+description: 'Create Site info'
+package: YG Modules
+core: 8.x

@@ -1,0 +1,33 @@
+uuid: f7b3348e-ae58-4604-9bd3-80ec3b30efde
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - user
+id: user.field_usertype
+field_name: field_usertype
+entity_type: user
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: caregiver
+      label: CAREGIVER
+    -
+      value: patient
+      label: PATIENT
+    -
+      value: healthcare_provider
+      label: 'HEALTHCARE PROVIDER'
+    -
+      value: other
+      label: OTHER
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

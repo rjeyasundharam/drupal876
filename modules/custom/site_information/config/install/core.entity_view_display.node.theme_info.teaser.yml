@@ -1,0 +1,26 @@
+uuid: 48bc6283-320b-4c9b-9b59-930fbadba8a4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.theme_info.field_contributed_theme
+    - field.field.node.theme_info.field_site_url
+    - field.field.node.theme_info.field_theme_name
+    - node.type.theme_info
+  module:
+    - user
+id: node.theme_info.teaser
+targetEntityType: node
+bundle: theme_info
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_contributed_theme: true
+  field_site_url: true
+  field_theme_name: true

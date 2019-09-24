@@ -1,0 +1,5 @@
+type: module
+name: Ramdom Field value Creation
+description: 'Create Random Field value Create'
+package: YG Modules
+core: 8.x

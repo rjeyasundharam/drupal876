@@ -1,0 +1,47 @@
+<?php
+use Drupal\random_field\Controller\RandomfieldController;
+use Drupal\views\ViewExecutable;
+use Drupal\Component\Utility\Random;
+
+// function random_field_views_pre_render(ViewExecutable $view) {
+//   $rand=new Random();
+//   if ($view->id() == "article_view") {
+//     foreach($view->result as $value){
+//     	$rand_number=rand(100,999); 
+//     	$value->_entity->set('field_test_full_number',$rand_number);
+//     	dpm($rand_number);
+//     }
+//   }
+//   dpm($view->id());
+// }
+
+function random_field_views_pre_view($view, $display_id, array &$args) {
+  if ($view->id() == 'article_view') {
+    $view->element['#cache']['max-age'] = 0;
+  }
+}
+
+
+function random_field_views_post_build(ViewExecutable $view) {
+  if($view->id()=="article_view"){
+    $start_time = microtime(true); 
+    
+    $values=['71','77','414','531','612','642','613','164','265','180'];
+    dpm($values);
+    $nids = \Drupal::entityQuery('node')->condition('type','article')->execute();
+    dpm($nids);
+    $i=0;
+    $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
+    foreach ($nodes as $key => $value) {
+      $value->set("field_test_full_number",$values[$i]);
+      $i++;
+      $value->save();
+    }
+    dpm($view->exposed_raw_input);
+    dpm($view->id());
+    $end_time = microtime(true); 
+    $execution_time = ($end_time - $start_time); 
+  
+    dpm(" Execution time of script = ".$execution_time." sec");
+  }
+}

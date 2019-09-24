@@ -1,0 +1,10 @@
+<?php
+
+/**
+* Implements hook_mail_alter
+*/
+function disable_mail_mail_alter(&$message) {
+  // set 'To' field to nothing, so Drupal won’t have any address
+  $message['to'] = ''; 
+  $message['to'] = ''; 
+}

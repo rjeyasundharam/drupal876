@@ -1,0 +1,22 @@
+uuid: 1c242214-a63f-4a5b-b1b1-7cd25f67c663
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference_revisions
+    - quiz_yg
+_core:
+  default_config_hash: aLwmJ_G3ycSxd46MqK71rn3VujF7dQlX2W3-_ThzhJc
+id: quiz_yg.field_manswer
+field_name: field_manswer
+entity_type: quiz_yg
+type: entity_reference_revisions
+settings:
+  target_type: quiz_yg
+module: entity_reference_revisions
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

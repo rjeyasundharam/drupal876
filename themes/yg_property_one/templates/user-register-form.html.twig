@@ -1,0 +1,60 @@
+<!-- CBED Signup Block Section -->
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12 cbed-signup-block-form">
+            <form>
+            <div class="row content">
+              <div class="col-12 col-sm-12 col-md-4 col-lg-4 title align-self-center">
+                <h2>Get the latest cannabinoid news, Information on noteworthy scientific research, important clinical developments, and<br /> other helpful resources.</h2>
+              </div>
+              <div class="col-12 col-sm-12 col-md-8 col-lg-8 form">
+                <div class="row">
+                  <div class="col-12 col-sm-12 col-md-3 col-lg-3">
+                    {{form.field_usertype.widget}}
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-9 col-lg-9">
+                    <div class="form-row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            {{ form.account.name }}
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            {{ form.field_last_name }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            {{ form.account.mail }}
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            {{ form.field_zipcode }}
+                        </div>
+                    </div>
+                    {{ form.form_build_id }}
+                    {{ form.form_id }}
+                    <div class="form-row text-right">
+                      <div class="form-group col-md-12">
+                        {{ form.actions }}                    
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 form-agree">
+                {% if form.field_ground_rounds %}
+                    <div class="checkbox checkbox-primary">
+                        {{form.field_ground_rounds}}
+                    </div>
+                {% endif %}
+                <div class="checkbox checkbox-primary">
+                    {{form.field_certify}}
+                </div>
+                <label>* Required Fields</label>
+              </div>
+            </div>
+            </form>            
+          </div>
+        </div>
+      </div>
+    <!-- CBED Signup Block Section End -->
+    {{form.signupresult}}
+    {{form.processresult}}

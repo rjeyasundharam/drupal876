@@ -1,0 +1,19 @@
+uuid: 181fdc9a-2471-4247-b28a-446dd0913905
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_theme_name
+    - node.type.theme_info
+id: node.theme_info.field_theme_name
+field_name: field_theme_name
+entity_type: node
+bundle: theme_info
+label: 'Theme Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

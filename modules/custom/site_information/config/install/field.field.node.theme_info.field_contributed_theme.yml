@@ -1,0 +1,19 @@
+uuid: d48321e5-4bac-40f8-b839-9d63ed711710
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_contributed_theme
+    - node.type.theme_info
+id: node.theme_info.field_contributed_theme
+field_name: field_contributed_theme
+entity_type: node
+bundle: theme_info
+label: 'Contributed Theme'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

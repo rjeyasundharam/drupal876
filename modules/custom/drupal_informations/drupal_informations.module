@@ -1,0 +1,101 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityInterface;
+
+function drupal_informations_cron() {
+	$url="https://www.drupal.org/api-d7/node.json?type=project_theme&page=0";
+	echo "<pre>";
+	$theme_list=[];
+	$i=0;
+	$connection = \Drupal::database();
+	
+	do{
+		$str=file_get_contents($url);
+		$themes=json_decode($str);
+		foreach ($themes->list as $theme) {
+			$theme_list[$i]['field_project_machine_name']=$theme->field_project_machine_name;
+			foreach ($theme->project_usage as $version=>$usages) {
+				$theme_list[$i]['project_usage'][$version]=	$usages;
+				if($usages>0){
+					$query = $connection->select('theme_information', 'ti');
+					$query->condition('theme_name', $theme->field_project_machine_name);
+					$query->condition('theme_version', $version);
+					$query->addField('ti', 'theme_id');
+					$sresult = $query->execute()->fetchField();
+					print_r("$theme->field_project_machine_name result is ".$result);
+					if($sresult==null){
+						$iresult = $connection->insert('theme_information')->fields([
+						    'theme_name' => $theme->field_project_machine_name,
+						    'theme_version' => $version,
+						    'theme_usage' => $usages,
+						])->execute();
+					}
+					else{
+						$uresult = $connection->update('theme_information')
+						  ->fields([
+						    'theme_usage' => $usages,
+						  ])
+						  ->condition('theme_name', $theme->field_project_machine_name)
+						  ->condition('theme_version', $version)
+						  ->execute();
+					}
+				}
+			}
+			$i++;
+		}
+		if(isset($themes->next))
+			$url=str_replace("node", "node.json", $themes->next);
+		else
+			$url="No Next";
+	}
+	while($url!="No Next");
+	// print_r($theme_list);
+	echo "</pre>";
+}
+
+
+function drupal_informations_theme($existing, $type, $theme, $path) {
+  
+  return [
+    'drupal_theme_finder' => [
+      'variables' => [
+        'title' => NULL,
+        'drupal' => NULL,
+        'drupalize_form' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+* Implements hook_mail().
+*/
+function drupal_informations_mail($key, &$message, $params) {
+ $options = array(
+   'langcode' => $message['langcode'],
+ );
+ switch ($key) {
+   case 'send_site_status':
+     $message['from'] = 'info@dds.com';
+     $message['subject'] = $params['subject'];
+     $message['body'][] = $params['message'];
+     break;
+ }
+}
+
+/**
+ * Implements hook_mail_alter()
+ * @param string $message
+ */
+function drupal_informations_mail_alter(&$message) {
+    $headers = array(
+        'MIME-Version' => '1.0',
+        'Content-Type' => 'text/html; charset=iso-8859-1; format=flowed',
+        'Content-Transfer-Encoding' => '8Bit',
+        'X-Mailer' => 'Drupal',
+    );
+    foreach ($headers as $key => $value) {
+        $message['headers'][$key] = $value;
+    }
+}

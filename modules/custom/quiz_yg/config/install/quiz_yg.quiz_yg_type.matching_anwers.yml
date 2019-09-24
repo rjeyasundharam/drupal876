@@ -1,0 +1,11 @@
+uuid: cb196eea-5941-4abd-9326-2f69ace3ad88
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: dvulvlO2-Db9_kM4El9oXevYhOvcc1Qc0TlFCed0RzE
+id: matching_anwers
+label: 'Matching anwers'
+icon_uuid: null
+description: ''
+behavior_plugins: {  }

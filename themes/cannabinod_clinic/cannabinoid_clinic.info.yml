@@ -1,0 +1,16 @@
+name: 'Cannabinoid clinic'
+description: 'YG Property one is a Responsive Drupal 8 theme for Property related websites.'
+core: 8.x
+type: theme
+base theme: classy
+screenshot: cannabinoid_clinic.png
+
+regions:
+  header: Header
+  logo: Logo
+  primary_menu: Primary menu
+  content: Content
+  footer: Footer
+  
+libraries:
+  - cannabinoid_clinic/global-styling

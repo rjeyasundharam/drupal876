@@ -1,0 +1,31 @@
+yg_quiz.take_quiz:
+  path: '/node/{node}/take_quiz'
+  defaults:
+    _form: 'Drupal\yg_quiz\Form\QuizForm'
+    _title_callback: 'Drupal\yg_quiz\Form\QuizForm::getTitle'
+  requirements:
+    _permission: 'access quiz game' 
+    _content_type:  'quiz'
+
+yg_quiz.quiz_result:
+  path: '/node/{node}/quiz-result'
+  defaults:
+    _controller: '\Drupal\yg_quiz\Controller\QuizResultController::getUserAllQuizResult'
+  requirements:
+    _permission: 'access quiz game' 
+    _content_type:  'quiz'
+
+yg_quiz.quiz_result_id:
+  path: '/node/{quiz_id}/quiz-result/{attempt_id}'
+  defaults:
+    _controller: '\Drupal\yg_quiz\Controller\QuizResultController::getUserQuizResult'
+  requirements:
+    _permission: 'access quiz game'
+
+yg_quiz.quiz_result_all:
+  path: '/admin/quiz-result'
+  defaults:
+    _controller: '\Drupal\yg_quiz\Controller\QuizResultController::getUserQuizResult'
+  requirements:
+    _permission: 'access quiz game'
+

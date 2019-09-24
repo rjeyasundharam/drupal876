@@ -1,0 +1,24 @@
+<div class="section light-bg" id="the-project">
+    <div class="container">
+        <div class="row">                              
+            <div class="col-12 col-lg-8 project-overview">
+                    <h3 class="wow slideInUp">{{content.field_title.0}}</h3>
+                    <p class="wow slideInUp">
+                        {{content.field_description.0}}
+                    </p>
+                <div class="row">
+                    {{content.field_project_detail}}
+                </div>                    
+                <div class="read-more"> 
+                    <a href="{{content.field_link.0["#url"]}}" class="btn btn-light wow slideInUp">{{content.field_link.0["#title"]}}</a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4 text-center">
+                <img src="{{ file_url(content.field_image['#items'].entity.uri.value)}}"
+                    class="img-fluid wow slideInUp"
+                    alt="{{ content.field_image['#items'].alt }}" 
+                    title="{{ content.field_image['#items'].title }}">
+            </div>                  
+        </div>
+    </div>
+</div>

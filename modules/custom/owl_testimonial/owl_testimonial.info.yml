@@ -1,0 +1,5 @@
+type: module
+name: Owl testimonial
+description: 'Create User testimonials with owl carousel'
+package: YG Modules
+core: 8.x
